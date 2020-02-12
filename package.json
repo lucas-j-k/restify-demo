@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "migrate": "node db/migrations/index.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/lucas-j-k/restify-demo/issues"
   },
-  "homepage": "https://github.com/lucas-j-k/restify-demo#readme"
+  "homepage": "https://github.com/lucas-j-k/restify-demo#readme",
+  "dependencies": {
+    "faker": "^4.1.0",
+    "sqlite3": "^4.1.1"
+  }
 }
