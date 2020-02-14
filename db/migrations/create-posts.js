@@ -4,7 +4,7 @@ const dbConnection = require('../connect');
 
 const createStatement = `
     CREATE TABLE IF NOT EXISTS posts (
-        id INT PRIMARY KEY, 
+        id INTEGER PRIMARY KEY, 
         user_id INT NOT NULL, 
         title TEXT NOT NULL,
         content TEXT NOT NULL
@@ -19,8 +19,7 @@ const migrate = () => {
         dbConnection.run(createStatement);
 
         // Insert Seed Data in a loop. Generate 5 posts for each user ID from 1 - 5
-        var insertStatement = dbConnection.prepare("INSERT INTO posts VALUES (?,?,?,?)");
-        let userCounter = 1;
+        var insertStatement = dbConnection.prepare("INSERT INTO posts (user_id, title, content) VALUES (?,?,?)");
 
         for(let i = 1; i <= 5; i++){
 
@@ -28,14 +27,11 @@ const migrate = () => {
             for(let j = 1; j <= 5; j++){
                 // Create 5 posts for current user
                 const sentenceCount = Math.floor(Math.random() * 16) + 5;
-                const id = userCounter;
+                // const id = userCounter;
                 const user_id = i;
                 const title = faker.lorem.sentence();
                 const content = faker.lorem.sentences(sentenceCount);
-                insertStatement.run(id, user_id, title, content);
-
-                // Increment counter, to create posts for the next user
-                userCounter += 1;
+                insertStatement.run(user_id, title, content);
             }
         }
         insertStatement.finalize();

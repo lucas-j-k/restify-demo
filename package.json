@@ -18,6 +18,7 @@
   "homepage": "https://github.com/lucas-j-k/restify-demo#readme",
   "dependencies": {
     "faker": "^4.1.0",
+    "restify": "^8.5.1",
     "sqlite3": "^4.1.1"
   }
 }
