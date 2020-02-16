@@ -1,33 +1,58 @@
 // Model for post resource. Holds the methods to interact with posts in the database.
 // Takes a dbConnection, which it uses to run the queries
 
+const errs = require('restify-errors');
+
 const dao = require('../db/dao');
 
-class PostModel {
-    constructor(dbConnection) {
-        this.dao = new dao(dbConnection);
-    }
 
-    async getAll() {
-        const result = await this.dao.all('SELECT * FROM posts', []);
-        return result;
-    }
+const PostController = (dbConnection) => {
+    const DAO = new dao(dbConnection);
 
-    async getById(id) {
-        const result = await this.dao.get('SELECT * FROM posts WHERE id = ?', [id]);
-        return result;
-    }
+    return {
 
-    async create(body){
-        const params = [
-            body.user_id,
-            body.title,
-            body.content
-        ];
-        await this.dao.run('INSERT INTO posts (user_id, title, content) VALUES (?,?,?)', params);
-        return {message: 'Post created successfully'}
-    }
+        getAll: async (req, res, next) => {
+            try {
+                const result = await DAO.all('SELECT * FROM posts', []);
+                res.json(result);
+                next();
+            } catch(e) {
+                const error = new errs.InternalServerError('Internal Server Error');
+                next(error);
+            }
+        }, 
 
+        getById: async (req, res, next) => {
+            try {
+                const result = await DAO.get('SELECT * FROM posts WHERE id = ?', [req.params.id]);
+                if(!result.row) {
+                    next(new errs.NotFoundError('Resource not found'));
+                } else {
+                    res.json(result);
+                    next();
+                }
+            } catch(e) {
+                const error = new errs.InternalServerError(e.message);
+                next(error);
+            }
+        },
+
+        create: async (req, res, next) => {
+            const params = [
+                req.body.user_id,
+                req.body.title,
+                req.body.content
+            ];
+            try {
+                const result = await DAO.run('INSERT INTO posts (user_id, title, content) VALUES (?,?,?)', params)
+                res.json(result);
+            } catch (e) {
+                const error = new errs.InternalServerError(e.message);
+                next(error);
+            }
+        }
+    }
 }
 
-module.exports = PostModel;
+
+module.exports = PostController;
