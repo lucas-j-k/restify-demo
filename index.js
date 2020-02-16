@@ -1,7 +1,7 @@
 const restify = require('restify');
 
 const dbConnection = require('./db/connect');
-const postRoutes = require('./routes/posts');
+const postRoutes = require('./routes/post');
 
 // Initialise Rrestify server
 const server = restify.createServer();
