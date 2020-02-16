@@ -18,7 +18,7 @@ class Dao {
         })
     }
 
-    get(statement, args =[]) {
+    get(statement, args = []) {
         return new Promise((resolve, reject) => {
             this.dbConnection.get(statement, args, (err, row) => {
                 if(err){
@@ -30,7 +30,7 @@ class Dao {
         })
     }
 
-    run(statement, args =[]){
+    run(statement, args = []){
         return new Promise(async (resolve, reject) => {
             this.dbConnection.run(statement, args, (err) => {
                 if(err){

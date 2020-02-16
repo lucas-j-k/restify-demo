@@ -2,6 +2,8 @@
 //  server: Instantiated Restify server
 //  dbConnection: Open connection to SQLite
 
+const errs = require('restify-errors');
+
 const PostController = require('../controllers/post');
 
 
@@ -16,8 +18,8 @@ const postRoutes = (server, dbConnection) => {
             const result = await controller.getAll();
             res.json(result);
         } catch(e) {
-            console.log('ERROR  ', e);
-            res.json({error: e.message})
+            const error = new errs.InternalServerError('Internal Server Error');
+            next(error);
         }
         next();
     })
@@ -26,20 +28,25 @@ const postRoutes = (server, dbConnection) => {
     server.get('/posts/:id', async (req, res, next) => {
         try {
             const result = await controller.getById(req.params.id);
-            console.log(result);
-            res.json(result);
+            if(!result.row) {
+                next(new errs.NotFoundError('Resource not found'));
+            } else {
+                res.json(result);
+                next();
+            }
         } catch(e) {
-            res.send({error: e.message})
+            const error = new errs.InternalServerError(e.message);
+            next(error);
         }
-        next();
     })
 
     server.post('/posts', async (req, res, next) => {
         try {
             const result = await controller.create(req.body);
-            res.json({ result });
+            res.json(result);
         } catch (e) {
-            res.json({error: e.message});
+            const error = new errs.InternalServerError(e.message);
+            next(error);
         }
     })
 
