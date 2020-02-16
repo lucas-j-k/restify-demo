@@ -1,19 +1,14 @@
-// Model for post resource. Holds the methods to interact with posts in the database.
-// Takes a dbConnection, which it uses to run the queries
+// Controller for post resource. Holds the methods to interact with posts in the database.
 
 const errs = require('restify-errors');
 
-const dao = require('../db/dao');
 
-
-const PostController = (dbConnection) => {
-    const DAO = new dao(dbConnection);
-
+const PostController = () => {
     return {
 
         getAll: async (req, res, next) => {
             try {
-                const result = await DAO.all('SELECT * FROM posts', []);
+                const result = await req.DAO.all('SELECT * FROM posts');
                 res.json(result);
                 next();
             } catch(e) {
@@ -24,7 +19,7 @@ const PostController = (dbConnection) => {
 
         getById: async (req, res, next) => {
             try {
-                const result = await DAO.get('SELECT * FROM posts WHERE id = ?', [req.params.id]);
+                const result = await req.DAO.get('SELECT * FROM posts WHERE id = ?', [req.params.id]);
                 if(!result.row) {
                     next(new errs.NotFoundError('Resource not found'));
                 } else {
@@ -44,7 +39,7 @@ const PostController = (dbConnection) => {
                 req.body.content
             ];
             try {
-                const result = await DAO.run('INSERT INTO posts (user_id, title, content) VALUES (?,?,?)', params)
+                const result = await req.DAO.run('INSERT INTO posts (user_id, title, content) VALUES (?,?,?)', params)
                 res.json(result);
             } catch (e) {
                 const error = new errs.InternalServerError(e.message);

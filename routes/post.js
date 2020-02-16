@@ -6,17 +6,16 @@ const errs = require('restify-errors');
 
 const PostController = require('../controllers/post');
 
-const dao = require('../db/dao');
 
 
-const postRoutes = (server, dbConnection) => {
+const postRoutes = (server) => {
 
     // Instantiate a post controller with the current connection.
-    const controller = PostController(dbConnection);
+    const controller = PostController();
 
-    server.get('/posts/v2', controller.getAll);
-    server.get('/posts/v2/:id', controller.getById);
-    server.post('/posts/v2', controller.create);
+    server.get('/posts', controller.getAll);
+    server.get('/posts/:id', controller.getById);
+    server.post('/posts', controller.create);
 
 }
 
