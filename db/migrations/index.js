@@ -7,6 +7,7 @@
 const resetDb = require('./reset-db');
 const migrateUsers = require('./create-users');
 const migratePosts = require('./create-posts');
+const migrateComments = require('./create-comments');
 
 const runMigrations = () => {
     try {
@@ -16,6 +17,8 @@ const runMigrations = () => {
         migrateUsers();
         console.log('Migrating Posts Table...');
         migratePosts();
+        console.log('Migrating Comments Table...');
+        migrateComments();
         console.log('Database ready');
     } catch(e){
         console.log("Error running migrations: ", e);
