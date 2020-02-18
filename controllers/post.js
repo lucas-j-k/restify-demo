@@ -3,8 +3,7 @@
 const errs = require('restify-errors');
 
 
-const PostController = () => {
-    return {
+const PostController = () => ({
 
         getAll: async (req, res, next) => {
             try {
@@ -46,8 +45,7 @@ const PostController = () => {
                 next(error);
             }
         }
-    }
-}
+    });
 
 
 module.exports = PostController;
