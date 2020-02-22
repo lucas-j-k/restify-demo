@@ -6,6 +6,7 @@ const errs = require('restify-errors');
 const PostController = () => ({
 
         getAll: async (req, res, next) => {
+            console.log(req);
             try {
                 const result = await req.DAO.all('SELECT * FROM posts');
                 res.json(result);
