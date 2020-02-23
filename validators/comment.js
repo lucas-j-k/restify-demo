@@ -1,31 +1,30 @@
 /* 
     -----------------------------------
-    Post - Validation functions
-    Check the validity of Post properties passed in the request body
+    Comment - Validation functions
+    Check the validity of comment properties passed in the request body
     -----------------------------------
  */
 
 const Joi = require('@hapi/joi');
 
-const newPostValidator = data => {
+const newCommentValidator = data => {
     const schema = Joi.object({
         user_id: Joi.number().required(),
-        title: Joi.string().min(5).max(1024).required(),
+        post_id: Joi.number().required(),,
         content: Joi.string().min(5).required(),
     });
     return schema.validate(data);
 }
 
-const updatePostValidator = data => {
+const updateCommentValidator = data => {
     const schema = Joi.object({
         user_id: Joi.number().required(),
-        title: Joi.string().min(5).max(1024).required(),
+        post_id: Joi.number().required(),
         content: Joi.string().min(5).required(),
-    });
-    return schema.validate(data);
+    })
 }
 
 module.exports = {
-    newPostValidator,
-    updatePostValidator,
+    newCommentValidator,
+    updateCommentValidator,
 }
