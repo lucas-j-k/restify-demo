@@ -2,6 +2,7 @@
 
 const errs = require('restify-errors');
 
+const { newPostValidator } = require('../validators/post');
 
 const PostController = () => ({
 
@@ -33,6 +34,10 @@ const PostController = () => ({
         },
 
         create: async (req, res, next) => {
+            // Validate request body
+            const { error } = newPostValidator(req.body);
+            if(error) return next(new errs.BadRequestError(error.details[0].message));
+
             const params = [
                 req.body.user_id,
                 req.body.title,

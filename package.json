@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/lucas-j-k/restify-demo#readme",
   "dependencies": {
+    "@hapi/joi": "^17.1.0",
     "faker": "^4.1.0",
     "restify": "^8.5.1",
     "restify-errors": "^8.0.2",
