@@ -52,7 +52,7 @@ const CommentController = () => ({
 
     getById: async (req, res, next) => {
         try {
-            const result = await req.DAO.get('SELECT * FROM comments WHERE id = ?', [req.params.id]);
+            const result = await req.DAO.get('SELECT c.content, c.id, c.user_id, c.post_id, u.username FROM comments c INNER JOIN users u ON c.user_id = u.id WHERE c.id = ?', [req.params.id]);
             if(!result.row) {
                 next(new errs.NotFoundError('Resource not found'));
             } else {

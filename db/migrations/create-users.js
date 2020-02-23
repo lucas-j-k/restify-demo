@@ -7,7 +7,8 @@ const createStatement = `
         id INT PRIMARY KEY, 
         email VARCHAR NOT NULL, 
         firstName VARCHAR NOT NULL, 
-        surname VARCHAR NOT NULL
+        surname VARCHAR NOT NULL,
+        username VARCHAR NOT NULL
     )
 `
 
@@ -19,12 +20,13 @@ const migrate = () => {
         dbConnection.run(createStatement);
 
         // Insert Seed Data in a loop
-        var insertStatement = dbConnection.prepare("INSERT INTO users VALUES (?,?,?,?)");
+        var insertStatement = dbConnection.prepare("INSERT INTO users VALUES (?,?,?,?,?)");
         for(let i = 1; i <= 5; i++){
             const email = faker.internet.email();
             const firstName = faker.name.firstName();
             const surname = faker.name.lastName();
-            insertStatement.run(i, email, firstName, surname);
+            const username = faker.internet.userName();
+            insertStatement.run(i, email, firstName, surname, username);
         }
         insertStatement.finalize();
 })
