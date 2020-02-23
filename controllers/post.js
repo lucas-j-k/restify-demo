@@ -2,7 +2,7 @@
 
 const errs = require('restify-errors');
 
-const { newPostValidator } = require('../validators/post');
+const { newPostValidator, updatePostValidator } = require('../validators/post');
 
 const PostController = () => ({
 
@@ -47,6 +47,25 @@ const PostController = () => ({
                 const result = await req.DAO.run('INSERT INTO posts (user_id, title, content) VALUES (?,?,?)', params)
                 res.json(result);
             } catch (e) {
+                const error = new errs.InternalServerError(e.message);
+                next(error);
+            }
+        },
+
+        update: async (req, res, next) => {
+            //Validate request body
+            const { error } = updatePostValidator(req.body);
+            if(error) return next(new errs.BadRequestError(error.details[0].message));
+
+            const params = [
+                req.body.title,
+                req.body.content,
+                req.params.id
+            ];
+            try {
+                const result = await req.DAO.run('UPDATE posts SET title = ?, content = ? WHERE id = ?', params);
+                res.json(result);
+            } catch(e) {
                 const error = new errs.InternalServerError(e.message);
                 next(error);
             }

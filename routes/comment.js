@@ -1,8 +1,6 @@
 //  Comment routes
 //  server: Instantiated Restify server
 
-const errs = require('restify-errors');
-
 const CommentController = require('../controllers/comment');
 
 
@@ -14,6 +12,8 @@ const commentRoutes = (server) => {
 
     server.get('/comments', controller.get);
     server.get('/comments/:id', controller.getById);
+    server.post('/comments', controller.create);
+    server.put('/comments/:id', controller.update);
 
 }
 

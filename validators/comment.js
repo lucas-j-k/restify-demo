@@ -10,7 +10,7 @@ const Joi = require('@hapi/joi');
 const newCommentValidator = data => {
     const schema = Joi.object({
         user_id: Joi.number().required(),
-        post_id: Joi.number().required(),,
+        post_id: Joi.number().required(),
         content: Joi.string().min(5).required(),
     });
     return schema.validate(data);
@@ -18,10 +18,9 @@ const newCommentValidator = data => {
 
 const updateCommentValidator = data => {
     const schema = Joi.object({
-        user_id: Joi.number().required(),
-        post_id: Joi.number().required(),
         content: Joi.string().min(5).required(),
     })
+    return schema.validate(data);
 }
 
 module.exports = {

@@ -7,6 +7,7 @@
 
 
 const errs = require('restify-errors');
+const { newCommentValidator, updateCommentValidator } = require('../validators/comment');
 
 
 const CommentController = () => ({
@@ -58,6 +59,44 @@ const CommentController = () => ({
                 res.json(result);
                 next();
             }
+        } catch(e) {
+            const error = new errs.InternalServerError(e.message);
+            next(error);
+        }
+    },
+
+    create: async (req, res, next) => {
+        // Validate request body
+        const { error } = newCommentValidator(req.body);
+        if(error) return next(new errs.BadRequestError(error.details[0].message))
+
+        const params = [
+            req.body.user_id,
+            req.body.post_id,
+            req.body.content,
+        ];
+
+        try {
+            const result = await req.DAO.run('INSERT INTO comments (user_id, post_id, content) VALUES (?,?,?)', params);
+            res.json(result);
+        } catch (e) {
+            const error = new errs.InternalServerError(e.message);
+            next(error);
+        }
+    },
+
+    update: async (req, res, next) => {
+        //Validate request body
+        const { error } = updateCommentValidator(req.body);
+        if(error) return next(new errs.BadRequestError(error.details[0].message));
+
+        const params = [
+            req.body.content,
+            req.params.id
+        ];
+        try {
+            const result = await req.DAO.run('UPDATE comments SET content = ? WHERE id = ?', params);
+            res.json(result);
         } catch(e) {
             const error = new errs.InternalServerError(e.message);
             next(error);

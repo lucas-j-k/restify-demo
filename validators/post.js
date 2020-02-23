@@ -18,7 +18,6 @@ const newPostValidator = data => {
 
 const updatePostValidator = data => {
     const schema = Joi.object({
-        user_id: Joi.number().required(),
         title: Joi.string().min(5).max(1024).required(),
         content: Joi.string().min(5).required(),
     });

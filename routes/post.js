@@ -2,7 +2,6 @@
 //  server: Instantiated Restify server
 //  dbConnection: Open connection to SQLite
 
-const errs = require('restify-errors');
 
 const PostController = require('../controllers/post');
 
@@ -16,6 +15,7 @@ const postRoutes = (server) => {
     server.get('/posts', controller.getAll);
     server.get('/posts/:id', controller.getById);
     server.post('/posts', controller.create);
+    server.put('/posts/:id', controller.update);
 
 }
 
