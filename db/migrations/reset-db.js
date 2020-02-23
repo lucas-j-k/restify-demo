@@ -1,3 +1,9 @@
+/*
+*
+*  Delete existing tables in DB
+*
+*/
+
 const dbConnection = require('../connect');
 
 const tables = [

@@ -1,4 +1,9 @@
-// Controller for post resource. Holds the methods to interact with posts in the database.
+/*
+*
+*  Controller for Post resource
+*  Define REST methods
+*
+*/
 
 const errs = require('restify-errors');
 

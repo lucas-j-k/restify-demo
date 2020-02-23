@@ -1,5 +1,9 @@
-//  Comment routes
-//  server: Instantiated Restify server
+/*
+*
+*  Controller for comment resouce.
+*  Takes an instantiated Restify server instance
+*
+*/
 
 const CommentController = require('../controllers/comment');
 

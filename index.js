@@ -1,3 +1,11 @@
+/*
+*
+*  Main file
+*  Instantiate Restify server, add middleware and setup routes
+*
+*/
+
+
 const restify = require('restify');
 
 const dbConnection = require('./db/connect');

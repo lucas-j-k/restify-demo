@@ -1,5 +1,8 @@
-// Convert SQLite methods into Promises
-// Accepts a DB connection object
+/*
+*
+*  Promise wrapper around SQLite methods
+*
+*/
 
 class Dao {
     constructor(dbConnection) {

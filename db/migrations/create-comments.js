@@ -1,3 +1,9 @@
+/*
+*
+*  Create comments table and seed data
+*
+*/
+
 const faker = require('faker');
 
 const dbConnection = require('../connect');

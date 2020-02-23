@@ -1,6 +1,9 @@
-//  Post routes
-//  server: Instantiated Restify server
-//  dbConnection: Open connection to SQLite
+/*
+*
+*  Controller for post resouce.
+*  Takes an instantiated Restify server instance
+*
+*/
 
 
 const PostController = require('../controllers/post');
