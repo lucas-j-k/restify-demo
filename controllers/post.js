@@ -7,20 +7,19 @@ const { newPostValidator, updatePostValidator } = require('../validators/post');
 const PostController = () => ({
 
         getAll: async (req, res, next) => {
-            console.log(req);
             try {
-                const result = await req.DAO.all('SELECT * FROM posts');
+                const result = await req.DAO.all('SELECT p.content, p.title, p.id, u.username, u.id AS user_id FROM posts p INNER JOIN users u ON p.user_id = u.id');
                 res.json(result);
                 next();
             } catch(e) {
-                const error = new errs.InternalServerError('Internal Server Error');
+                const error = new errs.InternalServerError(e.message);
                 next(error);
             }
         }, 
 
         getById: async (req, res, next) => {
             try {
-                const result = await req.DAO.get('SELECT * FROM posts WHERE id = ?', [req.params.id]);
+                const result = await req.DAO.get('SELECT p.title, p.content, p.id, u.id AS user_id, u.username FROM posts p INNER JOIN users u ON p.user_id = u.id WHERE p.id = ?', [req.params.id]);
                 if(!result.row) {
                     next(new errs.NotFoundError('Resource not found'));
                 } else {
