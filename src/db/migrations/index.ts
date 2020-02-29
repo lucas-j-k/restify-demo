@@ -1,6 +1,6 @@
 /*
 *
-* Drop existing tables and run migrations to build the database
+* Drop all existing tables and run migrations to build the database
 *
 */
 

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "migrate": "node dist/db/migrations/index.js"
+    "migrate": "node dist/db/migrations/index.js",
+    "dev": "./node_modules/.bin/tsc-watch --onCompilationComplete \"node dist/index.js\""
   },
   "repository": {
     "type": "git",
@@ -24,7 +25,14 @@
     "sqlite3": "^4.1.1"
   },
   "devDependencies": {
+    "@types/faker": "^4.1.10",
+    "@types/hapi__joi": "^16.0.12",
     "@types/node": "^13.7.7",
+    "@types/restify": "^8.4.2",
+    "@types/restify-errors": "^4.3.3",
+    "@types/sqlite3": "^3.1.6",
+    "tsc-watch": "^4.2.0",
+    "types-joi": "^2.0.1",
     "typescript": "^3.8.2"
   }
 }
