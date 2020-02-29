@@ -22,5 +22,8 @@
     "restify": "^8.5.1",
     "restify-errors": "^8.0.2",
     "sqlite3": "^4.1.1"
+  },
+  "devDependencies": {
+    "typescript": "^3.8.2"
   }
 }
