@@ -5,8 +5,7 @@
 *
 */
 
-const CommentController = require('../controllers/comment');
-
+import CommentController from '../controllers/comment';
 
 
 const commentRoutes = (server) => {
@@ -21,4 +20,4 @@ const commentRoutes = (server) => {
 
 }
 
-module.exports = commentRoutes;
+export default commentRoutes;

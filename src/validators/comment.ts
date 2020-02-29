@@ -5,9 +5,9 @@
     -----------------------------------
  */
 
-const Joi = require('@hapi/joi');
+import Joi from '@hapi/joi';
 
-const newCommentValidator = data => {
+export const newCommentValidator = data => {
     const schema = Joi.object({
         user_id: Joi.number().required(),
         post_id: Joi.number().required(),
@@ -16,14 +16,11 @@ const newCommentValidator = data => {
     return schema.validate(data);
 }
 
-const updateCommentValidator = data => {
+export const updateCommentValidator = data => {
     const schema = Joi.object({
         content: Joi.string().min(5).required(),
     })
     return schema.validate(data);
 }
 
-module.exports = {
-    newCommentValidator,
-    updateCommentValidator,
-}
+

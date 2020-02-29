@@ -4,7 +4,7 @@
 *
 */
 
-import resetDb from './resetDb';
+import resetDb from './reset-db';
 import migrateUsers from './create-users';
 import migratePosts from './create-posts';
 import migrateComments from './create-comments';

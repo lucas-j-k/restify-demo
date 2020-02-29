@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "migrate": "node db/migrations/index.js"
+    "migrate": "node dist/db/migrations/index.js"
   },
   "repository": {
     "type": "git",

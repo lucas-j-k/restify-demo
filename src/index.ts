@@ -6,12 +6,12 @@
 */
 
 
-const restify = require('restify');
+import restify from 'restify';
 
-const dbConnection = require('./db/connect');
-const dao = require('./db/dao');
-const postRoutes = require('./routes/post');
-const commentRoutes = require('./routes/comment');
+import dbConnection from './db/connect';
+import dao from './db/dao';
+import postRoutes from './routes/post';
+import commentRoutes from './routes/comment';
 
 // Initialise Restify server
 const server = restify.createServer();

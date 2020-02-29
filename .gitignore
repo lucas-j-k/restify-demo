@@ -1,6 +1,10 @@
 # SQLite Database file
 database.sqlite
 
+#Compiled Typescript
+dist/
+
+
 # Logs
 logs
 *.log

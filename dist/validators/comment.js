@@ -5,22 +5,22 @@
     Check the validity of comment properties passed in the request body
     -----------------------------------
  */
-const Joi = require('@hapi/joi');
-const newCommentValidator = data => {
-    const schema = Joi.object({
-        user_id: Joi.number().required(),
-        post_id: Joi.number().required(),
-        content: Joi.string().min(5).required(),
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const joi_1 = __importDefault(require("@hapi/joi"));
+exports.newCommentValidator = data => {
+    const schema = joi_1.default.object({
+        user_id: joi_1.default.number().required(),
+        post_id: joi_1.default.number().required(),
+        content: joi_1.default.string().min(5).required(),
     });
     return schema.validate(data);
 };
-const updateCommentValidator = data => {
-    const schema = Joi.object({
-        content: Joi.string().min(5).required(),
+exports.updateCommentValidator = data => {
+    const schema = joi_1.default.object({
+        content: joi_1.default.string().min(5).required(),
     });
     return schema.validate(data);
-};
-module.exports = {
-    newCommentValidator,
-    updateCommentValidator,
 };

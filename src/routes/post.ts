@@ -6,7 +6,7 @@
 */
 
 
-const PostController = require('../controllers/post');
+import PostController from '../controllers/post';
 
 
 
@@ -22,4 +22,4 @@ const postRoutes = (server) => {
 
 }
 
-module.exports = postRoutes;
+export default PostController;
