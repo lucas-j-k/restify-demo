@@ -5,9 +5,8 @@
 *
 */
 
-const errs = require('restify-errors');
-
-const { newPostValidator, updatePostValidator } = require('../validators/post');
+import errs from 'restify-errors';
+import { newPostValidator, updatePostValidator } from '../validators/post';
 
 const PostController = () => ({
 
@@ -77,4 +76,4 @@ const PostController = () => ({
     });
 
 
-module.exports = PostController;
+export default PostController;

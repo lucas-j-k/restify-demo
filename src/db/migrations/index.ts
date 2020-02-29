@@ -4,10 +4,10 @@
 *
 */
 
-const resetDb = require('./reset-db');
-const migrateUsers = require('./create-users');
-const migratePosts = require('./create-posts');
-const migrateComments = require('./create-comments');
+import resetDb from './resetDb';
+import migrateUsers from './create-users';
+import migratePosts from './create-posts';
+import migrateComments from './create-comments';
 
 const runMigrations = () => {
     try {

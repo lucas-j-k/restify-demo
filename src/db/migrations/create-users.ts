@@ -4,9 +4,9 @@
 *
 */
 
-const faker = require('faker');
+import faker from 'faker';
 
-const dbConnection = require('../connect');
+import dbConnection from '../connect';
 
 const createStatement = `
     CREATE TABLE IF NOT EXISTS users (
@@ -16,7 +16,7 @@ const createStatement = `
         surname VARCHAR NOT NULL,
         username VARCHAR NOT NULL
     )
-`
+`;
 
 const migrate = () => {
     //Serialize executes statements in sequence
@@ -38,4 +38,4 @@ const migrate = () => {
 })
 }
 
-module.exports = migrate;
+export default migrate;

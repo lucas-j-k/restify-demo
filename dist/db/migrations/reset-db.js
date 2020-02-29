@@ -4,7 +4,11 @@
 *  Delete existing tables in DB
 *
 */
-const dbConnection = require('../connect');
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const connect_1 = __importDefault(require("../connect"));
 const tables = [
     'users',
     'posts',
@@ -12,11 +16,11 @@ const tables = [
 ];
 const migrate = () => {
     //Serialize executes statements in sequence
-    dbConnection.serialize(() => {
+    connect_1.default.serialize(() => {
         console.log('Dropping tables: ', tables.join(' | '));
         tables.forEach(table => {
-            dbConnection.run(`DROP TABLE IF EXISTS ${table}`);
+            connect_1.default.run(`DROP TABLE IF EXISTS ${table}`);
         });
     });
 };
-module.exports = migrate;
+exports.default = migrate;

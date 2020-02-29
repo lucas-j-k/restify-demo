@@ -14,19 +14,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const errs = require('restify-errors');
-const { newCommentValidator, updateCommentValidator } = require('../validators/comment');
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const restify_errors_1 = __importDefault(require("restify-errors"));
+const comment_1 = require("../validators/comment");
 const CommentController = () => ({
     get: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         // Pull filter values from the query params
         const { user_id, post_id } = req.query;
         //  If no filters are present, reject request
         if (!user_id && !post_id) {
-            return next(new errs.BadRequestError('Missing parameters'));
+            return next(new restify_errors_1.default.BadRequestError('Missing parameters'));
         }
         //  If user and post filters are both specified, reject the request
         if (user_id && post_id) {
-            return next(new errs.BadRequestError('Cannot filter on both user and post'));
+            return next(new restify_errors_1.default.BadRequestError('Cannot filter on both user and post'));
         }
         let conditionColumn, conditionValue;
         if (user_id) {
@@ -44,7 +48,7 @@ const CommentController = () => ({
             next();
         }
         catch (e) {
-            const error = new errs.InternalServerError(e.message);
+            const error = new restify_errors_1.default.InternalServerError(e.message);
             next(error);
         }
     }),
@@ -52,7 +56,7 @@ const CommentController = () => ({
         try {
             const result = yield req.DAO.get('SELECT c.content, c.id, c.user_id, u.username FROM comments c INNER JOIN users u ON c.user_id = u.id WHERE c.id = ?', [req.params.id]);
             if (!result.row) {
-                next(new errs.NotFoundError('Resource not found'));
+                next(new restify_errors_1.default.NotFoundError('Resource not found'));
             }
             else {
                 res.json(result);
@@ -60,15 +64,15 @@ const CommentController = () => ({
             }
         }
         catch (e) {
-            const error = new errs.InternalServerError(e.message);
+            const error = new restify_errors_1.default.InternalServerError(e.message);
             next(error);
         }
     }),
     create: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         // Validate request body
-        const { error } = newCommentValidator(req.body);
+        const { error } = comment_1.newCommentValidator(req.body);
         if (error)
-            return next(new errs.BadRequestError(error.details[0].message));
+            return next(new restify_errors_1.default.BadRequestError(error.details[0].message));
         const params = [
             req.body.user_id,
             req.body.post_id,
@@ -79,15 +83,15 @@ const CommentController = () => ({
             res.json(result);
         }
         catch (e) {
-            const error = new errs.InternalServerError(e.message);
+            const error = new restify_errors_1.default.InternalServerError(e.message);
             next(error);
         }
     }),
     update: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         //Validate request body
-        const { error } = updateCommentValidator(req.body);
+        const { error } = comment_1.updateCommentValidator(req.body);
         if (error)
-            return next(new errs.BadRequestError(error.details[0].message));
+            return next(new restify_errors_1.default.BadRequestError(error.details[0].message));
         const params = [
             req.body.content,
             req.params.id
@@ -97,9 +101,9 @@ const CommentController = () => ({
             res.json(result);
         }
         catch (e) {
-            const error = new errs.InternalServerError(e.message);
+            const error = new restify_errors_1.default.InternalServerError(e.message);
             next(error);
         }
     })
 });
-module.exports = CommentController;
+exports.default = CommentController;

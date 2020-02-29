@@ -5,10 +5,8 @@
 *
 */
 
-
-const errs = require('restify-errors');
-const { newCommentValidator, updateCommentValidator } = require('../validators/comment');
-
+import errs from 'restify-errors';
+import { newCommentValidator, updateCommentValidator } from '../validators/comment';
 
 const CommentController = () => ({
 
@@ -104,4 +102,4 @@ const CommentController = () => ({
     }
 })
 
-module.exports = CommentController;
+export default CommentController;

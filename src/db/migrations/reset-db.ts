@@ -4,7 +4,7 @@
 *
 */
 
-const dbConnection = require('../connect');
+import dbConnection from '../connect';
 
 const tables = [
     'users',
@@ -22,4 +22,4 @@ const migrate = () => {
     })
 }
 
-module.exports = migrate;
+export default migrate;

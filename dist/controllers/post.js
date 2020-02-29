@@ -14,8 +14,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const errs = require('restify-errors');
-const { newPostValidator, updatePostValidator } = require('../validators/post');
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const restify_errors_1 = __importDefault(require("restify-errors"));
+const post_1 = require("../validators/post");
 const PostController = () => ({
     getAll: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -24,7 +28,7 @@ const PostController = () => ({
             next();
         }
         catch (e) {
-            const error = new errs.InternalServerError(e.message);
+            const error = new restify_errors_1.default.InternalServerError(e.message);
             next(error);
         }
     }),
@@ -32,7 +36,7 @@ const PostController = () => ({
         try {
             const result = yield req.DAO.get('SELECT p.title, p.content, p.id, u.id AS user_id, u.username FROM posts p INNER JOIN users u ON p.user_id = u.id WHERE p.id = ?', [req.params.id]);
             if (!result.row) {
-                next(new errs.NotFoundError('Resource not found'));
+                next(new restify_errors_1.default.NotFoundError('Resource not found'));
             }
             else {
                 res.json(result);
@@ -40,15 +44,15 @@ const PostController = () => ({
             }
         }
         catch (e) {
-            const error = new errs.InternalServerError(e.message);
+            const error = new restify_errors_1.default.InternalServerError(e.message);
             next(error);
         }
     }),
     create: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         // Validate request body
-        const { error } = newPostValidator(req.body);
+        const { error } = post_1.newPostValidator(req.body);
         if (error)
-            return next(new errs.BadRequestError(error.details[0].message));
+            return next(new restify_errors_1.default.BadRequestError(error.details[0].message));
         const params = [
             req.body.user_id,
             req.body.title,
@@ -59,15 +63,15 @@ const PostController = () => ({
             res.json(result);
         }
         catch (e) {
-            const error = new errs.InternalServerError(e.message);
+            const error = new restify_errors_1.default.InternalServerError(e.message);
             next(error);
         }
     }),
     update: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         //Validate request body
-        const { error } = updatePostValidator(req.body);
+        const { error } = post_1.updatePostValidator(req.body);
         if (error)
-            return next(new errs.BadRequestError(error.details[0].message));
+            return next(new restify_errors_1.default.BadRequestError(error.details[0].message));
         const params = [
             req.body.title,
             req.body.content,
@@ -78,9 +82,9 @@ const PostController = () => ({
             res.json(result);
         }
         catch (e) {
-            const error = new errs.InternalServerError(e.message);
+            const error = new restify_errors_1.default.InternalServerError(e.message);
             next(error);
         }
     })
 });
-module.exports = PostController;
+exports.default = PostController;
