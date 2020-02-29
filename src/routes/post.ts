@@ -22,4 +22,4 @@ const postRoutes = (server) => {
 
 }
 
-export default PostController;
+export default postRoutes;
