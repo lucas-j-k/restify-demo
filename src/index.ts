@@ -6,7 +6,7 @@
 */
 
 
-import restify from 'restify';
+import restify, {Request} from 'restify';
 
 import dbConnection from './db/connect';
 import dao from './db/dao';
@@ -20,11 +20,6 @@ const server = restify.createServer();
 server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.queryParser());
 
-// Add middleware to set up the database access object so it is available on all request objects in routes
-server.use((req, res, next) => {
-    req.DAO = new dao(dbConnection);
-    next();
-})
 
 // Initialise resource routes
 postRoutes(server);

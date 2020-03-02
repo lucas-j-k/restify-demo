@@ -5,17 +5,23 @@
 *
 */
 
+import { Server } from 'restify';
 
-import PostController from '../controllers/post';
+import PostController from '../class-controllers/Post';
+import DAO from '../db/dao';
+import dbConnection from '../db/connect';
 
 
 
-const postRoutes = (server) => {
+const postRoutes = (server: Server) => {
 
-    // Instantiate a post controller with the current connection.
-    const controller = PostController();
+    // Instantiate a custom database access object
+    const Dao = new DAO(dbConnection);
 
-    server.get('/posts', controller.getAll);
+    // Instantiate a comment controller with the connected Database access object
+    const controller = new PostController(Dao);
+
+    server.get('/posts', controller.get);
     server.get('/posts/:id', controller.getById);
     server.post('/posts', controller.create);
     server.put('/posts/:id', controller.update);

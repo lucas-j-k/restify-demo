@@ -6,8 +6,9 @@
  */
 
 import Joi from '@hapi/joi';
+import { Comment } from '../interfaces/db';
 
-export const newCommentValidator = data => {
+export const newCommentValidator = (data: Comment) => {
     const schema = Joi.object({
         user_id: Joi.number().required(),
         post_id: Joi.number().required(),
@@ -16,7 +17,7 @@ export const newCommentValidator = data => {
     return schema.validate(data);
 }
 
-export const updateCommentValidator = data => {
+export const updateCommentValidator = (data: Comment) => {
     const schema = Joi.object({
         content: Joi.string().min(5).required(),
     })

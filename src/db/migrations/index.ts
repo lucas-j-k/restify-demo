@@ -9,7 +9,7 @@ import migrateUsers from './create-users';
 import migratePosts from './create-posts';
 import migrateComments from './create-comments';
 
-const runMigrations = () => {
+const runMigrations = (): void => {
     try {
         console.log('Resetting DB...');
         resetDb();

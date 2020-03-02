@@ -7,7 +7,9 @@
 
 import Joi from '@hapi/joi';
 
-export const newPostValidator = data => {
+import { Post } from '../interfaces/db';
+
+export const newPostValidator = (data: Post) => {
     const schema = Joi.object({
         user_id: Joi.number().required(),
         title: Joi.string().min(5).max(1024).required(),
@@ -16,7 +18,7 @@ export const newPostValidator = data => {
     return schema.validate(data);
 }
 
-export const updatePostValidator = data => {
+export const updatePostValidator = (data: Post) => {
     const schema = Joi.object({
         title: Joi.string().min(5).max(1024).required(),
         content: Joi.string().min(5).required(),

@@ -6,11 +6,13 @@
 */
 
 import errs from 'restify-errors';
+import {Request, Response, Next} from 'restify';
+
 import { newCommentValidator, updateCommentValidator } from '../validators/comment';
 
 const CommentController = () => ({
 
-    get: async (req, res, next) => {
+    get: async (req: RequestWithDatabase, res: Response, next: Next) => {
 
         // Pull filter values from the query params
         const { user_id, post_id } = req.query;
@@ -25,7 +27,7 @@ const CommentController = () => ({
             return next(new errs.BadRequestError('Cannot filter on both user and post'))
         }
 
-        let conditionColumn, conditionValue;
+        let conditionColumn: string|undefined, conditionValue: string|undefined;
 
         if(user_id) {
             conditionColumn = 'user_id';
@@ -36,7 +38,7 @@ const CommentController = () => ({
             conditionValue = post_id;
         }
 
-        const statement = `SELECT c.content, c.id, c.user_id, u.username FROM comments c INNER JOIN users u ON c.user_id = u.id WHERE ${conditionColumn} = ?`;
+        const statement: string = `SELECT c.content, c.id, c.user_id, u.username FROM comments c INNER JOIN users u ON c.user_id = u.id WHERE ${conditionColumn} = ?`;
 
         try {
             const result = await req.DAO.all(statement, [conditionValue]);
@@ -48,10 +50,10 @@ const CommentController = () => ({
         }
     },
 
-    getById: async (req, res, next) => {
+    getById: async (req: RequestWithDatabase, res: Response, next: Next) => {
         try {
             const result = await req.DAO.get('SELECT c.content, c.id, c.user_id, u.username FROM comments c INNER JOIN users u ON c.user_id = u.id WHERE c.id = ?', [req.params.id]);
-            if(!result.row) {
+            if(!result) {
                 next(new errs.NotFoundError('Resource not found'));
             } else {
                 res.json(result);
@@ -63,12 +65,12 @@ const CommentController = () => ({
         }
     },
 
-    create: async (req, res, next) => {
+    create: async (req: RequestWithDatabase, res: Response, next: Next) => {
         // Validate request body
         const { error } = newCommentValidator(req.body);
         if(error) return next(new errs.BadRequestError(error.details[0].message))
 
-        const params = [
+        const params: [number, number, string] = [
             req.body.user_id,
             req.body.post_id,
             req.body.content,
@@ -83,12 +85,12 @@ const CommentController = () => ({
         }
     },
 
-    update: async (req, res, next) => {
+    update: async (req: RequestWithDatabase, res: Response, next: Next) => {
         //Validate request body
         const { error } = updateCommentValidator(req.body);
         if(error) return next(new errs.BadRequestError(error.details[0].message));
 
-        const params = [
+        const params: [string, number] = [
             req.body.content,
             req.params.id
         ];

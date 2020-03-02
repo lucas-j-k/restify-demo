@@ -8,7 +8,7 @@ import faker from 'faker';
 
 import dbConnection from '../connect';
 
-const createStatement = `
+const createStatement: string = `
     CREATE TABLE IF NOT EXISTS users (
         id INT PRIMARY KEY, 
         email VARCHAR NOT NULL, 
@@ -18,7 +18,7 @@ const createStatement = `
     )
 `;
 
-const migrate = () => {
+const migrate = (): void => {
     //Serialize executes statements in sequence
     dbConnection.serialize(()=>{
 
@@ -28,10 +28,10 @@ const migrate = () => {
         // Insert Seed Data in a loop
         var insertStatement = dbConnection.prepare("INSERT INTO users VALUES (?,?,?,?,?)");
         for(let i = 1; i <= 5; i++){
-            const email = faker.internet.email();
-            const firstName = faker.name.firstName();
-            const surname = faker.name.lastName();
-            const username = faker.internet.userName();
+            const email: string  = faker.internet.email();
+            const firstName: string = faker.name.firstName();
+            const surname: string = faker.name.lastName();
+            const username: string = faker.internet.userName();
             insertStatement.run(i, email, firstName, surname, username);
         }
         insertStatement.finalize();

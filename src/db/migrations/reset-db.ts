@@ -6,7 +6,7 @@
 
 import dbConnection from '../connect';
 
-const tables = [
+const tables: Array<string> = [
     'users',
     'posts',
     'comments',
@@ -16,7 +16,7 @@ const migrate = () => {
     //Serialize executes statements in sequence
     dbConnection.serialize(()=>{
         console.log('Dropping tables: ', tables.join(' | '));
-        tables.forEach(table => {
+        tables.forEach((table: string) => {
             dbConnection.run(`DROP TABLE IF EXISTS ${table}`);
         });
     })

@@ -6,13 +6,18 @@
 */
 
 import errs from 'restify-errors';
+import {Request, Response, Next} from 'restify';
+
+import { DbResult } from '../interfaces/db';
 import { newPostValidator, updatePostValidator } from '../validators/post';
+
 
 const PostController = () => ({
 
-        getAll: async (req, res, next) => {
+        getAll: async (req: Request, res: Response, next: Next): Promise<void> => {
             try {
-                const result = await req.DAO.all('SELECT p.content, p.title, p.id, u.username, u.id AS user_id FROM posts p INNER JOIN users u ON p.user_id = u.id');
+                const result: DbResult  = await req.DAO.all('SELECT p.content, p.title, p.id, u.username, u.id AS user_id FROM posts p INNER JOIN users u ON p.user_id = u.id');
+                console.log('Multiple RESULT :: ', result);
                 res.json(result);
                 next();
             } catch(e) {
@@ -21,10 +26,11 @@ const PostController = () => ({
             }
         }, 
 
-        getById: async (req, res, next) => {
+        getById: async (req: Request, res: Response, next: Next): Promise<void> => {
             try {
-                const result = await req.DAO.get('SELECT p.title, p.content, p.id, u.id AS user_id, u.username FROM posts p INNER JOIN users u ON p.user_id = u.id WHERE p.id = ?', [req.params.id]);
-                if(!result.row) {
+                const result: DbResult = await req.DAO.get('SELECT p.title, p.content, p.id, u.id AS user_id, u.username FROM posts p INNER JOIN users u ON p.user_id = u.id WHERE p.id = ?', [req.params.id]);
+                console.log('Single RESULT :: ', result);
+                if(!result) {
                     next(new errs.NotFoundError('Resource not found'));
                 } else {
                     res.json(result);
@@ -36,12 +42,13 @@ const PostController = () => ({
             }
         },
 
-        create: async (req, res, next) => {
+        create: async (req: Request, res: Response, next: Next): Promise<void> => {
+            
             // Validate request body
             const { error } = newPostValidator(req.body);
             if(error) return next(new errs.BadRequestError(error.details[0].message));
 
-            const params = [
+            const params: [number, string, string] = [
                 req.body.user_id,
                 req.body.title,
                 req.body.content
@@ -55,12 +62,12 @@ const PostController = () => ({
             }
         },
 
-        update: async (req, res, next) => {
+        update: async (req: Request, res: Response, next: Next): Promise<void> => {
             //Validate request body
             const { error } = updatePostValidator(req.body);
             if(error) return next(new errs.BadRequestError(error.details[0].message));
 
-            const params = [
+            const params: [string, string, number] = [
                 req.body.title,
                 req.body.content,
                 req.params.id

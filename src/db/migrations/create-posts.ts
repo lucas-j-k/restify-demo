@@ -8,7 +8,7 @@ import faker from 'faker';
 
 import dbConnection from '../connect';
 
-const createStatement = `
+const createStatement: string = `
     CREATE TABLE IF NOT EXISTS posts (
         id INTEGER PRIMARY KEY, 
         user_id INT NOT NULL, 
@@ -17,7 +17,7 @@ const createStatement = `
     )
 `;
 
-const migrate = () => {
+const migrate = (): void => {
     //Serialize executes statements in sequence
     dbConnection.serialize(()=>{
 
@@ -32,11 +32,11 @@ const migrate = () => {
             // Cycle through 5 users
             for(let j = 1; j <= 5; j++){
                 // Create 5 posts for current user
-                const sentenceCount = Math.floor(Math.random() * 16) + 5;
+                const sentenceCount: number = Math.floor(Math.random() * 16) + 5;
                 // const id = userCounter;
-                const user_id = i;
-                const title = faker.lorem.sentence();
-                const content = faker.lorem.sentences(sentenceCount);
+                const user_id: number = i;
+                const title: string = faker.lorem.sentence();
+                const content: string = faker.lorem.sentences(sentenceCount);
                 insertStatement.run(user_id, title, content);
             }
         }
