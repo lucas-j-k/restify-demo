@@ -7,7 +7,7 @@
 
 import { Server } from 'restify';
 
-import CommentController from '../controllers/comment';
+import CommentController from '../controllers/Comment';
 import DAO from '../db/dao';
 import dbConnection from '../db/connect';
 
