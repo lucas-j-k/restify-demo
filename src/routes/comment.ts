@@ -1,6 +1,6 @@
 /*
 *
-*  Controller for comment resouce.
+*  Routes for comment resouce.
 *  Takes an instantiated Restify server instance
 *
 */
@@ -24,7 +24,7 @@ const commentRoutes = (server: Server) => {
     server.get('/comments/:id', controller.getById);
     server.post('/comments', controller.create);
     server.put('/comments/:id', controller.update);
-
+    server.del('/comments/:id', controller.delete);
 }
 
 export default commentRoutes;

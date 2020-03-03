@@ -29,3 +29,9 @@ export interface MessageResult {
     message: string,
 }
 
+export interface CommentQuery {
+    user_id?: number,
+    post_id?: number,
+    id?: number,
+}
+

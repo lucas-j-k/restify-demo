@@ -9,29 +9,29 @@ import errs from 'restify-errors';
 import DAO from '../db/dao';
 
 import ConnectedController from './ConnectedController';
-import { newCommentValidator, updateCommentValidator } from '../validators/comment';
-
-
+import { newCommentValidator, updateCommentValidator, filterValidator } from '../validators/comment';
+import { idValidator } from '../validators/generic';
 
 class CommentController extends ConnectedController {
 
     constructor(dao: DAO){
         super(dao);
+        this.get = this.get.bind(this);
+        this.getById = this.getById.bind(this);
+        this.create = this.create.bind(this);
+        this.update = this.update.bind(this);
+        this.delete = this.delete.bind(this);
     }
 
     public async get(req: Request, res: Response, next: Next){
         
-        // Verify we have at least one filter in the request query string
-        const { user_id, post_id} = req.query;
+        const { error } = filterValidator(req.query);
 
-        if(!user_id && !post_id) {
-            return next(new errs.BadRequestError('Request URL must contain a filter parameter'));
+        if(error){
+            return next(new errs.BadRequestError(error.details[0].message));
         }
-        
-        // Can't filter by both user and post
-        if(user_id && post_id){
-            return next(new errs.BadRequestError('Cannot filter on both post and user'));
-        }
+
+        const { user_id, post_id } = req.query;
 
         let conditionColumn: string|undefined, conditionValue: string|undefined;
 
@@ -59,12 +59,14 @@ class CommentController extends ConnectedController {
     }
 
     public async getById(req: Request, res: Response, next: Next){
-        
-        const { id } = req.params;
+                
+        const { error } = idValidator(req.params);
 
-        if(typeof id !== 'number'){
-            return next(new errs.BadRequestError('ID must be an integer'));
-        };
+        if(error){
+            return next(new errs.BadRequestError(error.details[0].message));
+        }
+
+        const { id } = req.params;
 
         const statement = 'SELECT c.content, c.id, c.user_id, u.username FROM comments c INNER JOIN users u ON c.user_id = u.id WHERE c.id = ?';
         
@@ -110,25 +112,21 @@ class CommentController extends ConnectedController {
 
     public async update(req: Request, res: Response, next: Next) {
 
-        // Validate ID param is an integer
-        const { id } = req.params;
+        const requestParams = {
+            content: req.body.content,
+            id: req.params.id,
+        }
 
-        if(typeof id !== 'number'){
-            return next(new errs.BadRequestError('ID must be an integer'));
-        };
+        // Validate id and content
+        const { error } = updateCommentValidator(requestParams);
 
-        // Validate request body
-        const { error } = updateCommentValidator(req.body);
         if(error) {
             return next(new errs.BadRequestError(error.details[0].message));
         }
+
+        const params = Object.values(requestParams);
         
         const statement = 'UPDATE comments SET content = ? WHERE id = ?';
-
-        const params = [
-            req.body.content,
-            req.params.id
-        ];
         
         try {
             const result = await this.DAO.run(statement, params);
@@ -137,6 +135,27 @@ class CommentController extends ConnectedController {
             const error = new errs.InternalServerError(e.message);
             next(error);
         }
+    }
+
+    public async delete(req: Request, res: Response, next: Next) {
+
+        const { error } = idValidator(req.params);
+
+        if(error){
+            return next(new errs.BadRequestError(error.details[0].message));
+        }
+
+        const { id } = req.params;
+
+        const statement = 'DELETE from comments WHERE id = ?';
+
+        try {
+            const result = await this.DAO.run(statement, [id]);
+            res.json(result);
+        } catch (e) {
+            next(new errs.InternalError(e.message));
+        }
+
     }
 
 
