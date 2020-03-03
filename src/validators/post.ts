@@ -22,6 +22,7 @@ export const updatePostValidator = (data: Post) => {
     const schema = Joi.object({
         title: Joi.string().min(5).max(1024).required(),
         content: Joi.string().min(5).required(),
+        id: Joi.number().integer().min(1).required(),
     });
     return schema.validate(data);
 }

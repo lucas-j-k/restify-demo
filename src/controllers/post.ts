@@ -10,12 +10,18 @@ import DAO from '../db/dao';
 
 import ConnectedController from './ConnectedController';
 import { newPostValidator, updatePostValidator } from '../validators/post';
+import { idValidator } from '../validators/generic';
 
 
 class PostController extends ConnectedController {
 
     constructor(dao: DAO){
         super(dao);
+        this.get = this.get.bind(this);
+        this.getById = this.getById.bind(this);
+        this.create = this.create.bind(this);
+        this.update = this.update.bind(this);
+        this.delete = this.delete.bind(this);
     }
 
     public async get (req: Request, res: Response, next: Next) {
@@ -34,11 +40,13 @@ class PostController extends ConnectedController {
 
     public async getById (req: Request, res: Response, next: Next) {
         
-        const { id } = req.params;
+        const { error } = idValidator(req.params);
 
-        if(typeof id !== 'number'){
-            return next(new errs.BadRequestError('ID must be an integer'));
-        };
+        if(error){
+            return next(new errs.BadRequestError(error.details[0].message));
+        }
+
+        const { id } = req.params;
 
         const statement = 'SELECT p.title, p.content, p.id, u.id AS user_id, u.username FROM posts p INNER JOIN users u ON p.user_id = u.id WHERE p.id = ?';
         
@@ -63,9 +71,8 @@ class PostController extends ConnectedController {
         // Validate request body
         const { error } = newPostValidator(req.body);
 
-        if(error) {
-            return next(new errs.BadRequestError(error.details[0].message));
-        };
+        if(error) return next(new errs.BadRequestError(error.details[0].message));
+        
 
         const statement = 'INSERT INTO posts (user_id, title, content) VALUES (?,?,?)';
 
@@ -86,15 +93,14 @@ class PostController extends ConnectedController {
 
     public async update (req: Request, res: Response, next: Next) {
 
-        // Validate ID param is an integer
-        const { id } = req.params;
-
-        if(typeof id !== 'number'){
-            return next(new errs.BadRequestError('ID must be an integer'));
+        const requestParams = {
+            title: req.body.title,
+            content: req.body.content,
+            id: req.params.id,
         };
 
-        // Validate request body
-        const { error } = updatePostValidator(req.body);
+        // Validate request params
+        const { error } = updatePostValidator(requestParams);
 
         if(error) {
             return next(new errs.BadRequestError(error.details[0].message));
@@ -102,11 +108,7 @@ class PostController extends ConnectedController {
 
         const statement = 'UPDATE posts SET title = ?, content = ? WHERE id = ?';
 
-        const params: [string, string, number] = [
-            req.body.title,
-            req.body.content,
-            req.params.id
-        ];
+        const params = Object.values(requestParams);
 
         try {
             const result = await this.DAO.run(statement, params);
@@ -115,6 +117,27 @@ class PostController extends ConnectedController {
             const error = new errs.InternalServerError(e.message);
             next(error);
         }
+    }
+
+    public async delete(req: Request, res: Response, next: Next) {
+
+        const { error } = idValidator(req.params);
+
+        if(error){
+            return next(new errs.BadRequestError(error.details[0].message));
+        }
+
+        const { id } = req.params;
+
+        const statement = 'DELETE from posts WHERE id = ?';
+
+        try {
+            const result = await this.DAO.run(statement, [id]);
+            res.json(result);
+        } catch (e) {
+            next(new errs.InternalError(e.message));
+        }
+
     }
 
 }

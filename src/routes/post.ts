@@ -25,6 +25,7 @@ const postRoutes = (server: Server) => {
     server.get('/posts/:id', controller.getById);
     server.post('/posts', controller.create);
     server.put('/posts/:id', controller.update);
+    server.del('/posts/:id', controller.delete);
 
 }
 
