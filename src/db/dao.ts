@@ -22,7 +22,8 @@ class Dao {
                 if(err) {
                     reject(err);
                 } else {
-                    const result = {data: rows};
+                    const data = rows ? [rows] : [];
+                    const result = { data };
                     resolve(result);
                 }
             });
@@ -35,7 +36,8 @@ class Dao {
                 if(err){
                     reject(err);
                 } else {
-                    const result = {data: [rows]};
+                    const data = rows ? [rows] : [];
+                    const result = { data };
                     resolve(result);
                 }
             })

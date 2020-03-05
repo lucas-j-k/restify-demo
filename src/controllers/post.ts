@@ -54,7 +54,7 @@ class PostController extends ConnectedController {
 
             const result = await this.DAO.get(statement, [req.params.id]);
 
-            if(!result) {
+            if(result.data.length === 0) {
                 next(new errs.NotFoundError('Resource not found'));
             } else {
                 res.json(result);
@@ -111,6 +111,10 @@ class PostController extends ConnectedController {
         const params = Object.values(requestParams);
 
         try {
+            const existingRecord = await this.DAO.get('SELECT id FROM posts WHERE id = ?', req.params.id);
+            if(existingRecord.data.length === 0) {
+                return next(new errs.NotFoundError('Resource not found'));
+            }
             const result = await this.DAO.run(statement, params);
             res.json(result);
         } catch(e) {
@@ -132,6 +136,10 @@ class PostController extends ConnectedController {
         const statement = 'DELETE from posts WHERE id = ?';
 
         try {
+            const existingRecord = await this.DAO.get('SELECT id FROM posts WHERE id = ?', id);
+            if(existingRecord.data.length === 0) {
+                return next(new errs.NotFoundError('Resource not found'));
+            }
             const result = await this.DAO.run(statement, [id]);
             res.json(result);
         } catch (e) {
