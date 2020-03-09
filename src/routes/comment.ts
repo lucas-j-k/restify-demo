@@ -12,7 +12,7 @@ import DAO from '../db/dao';
 import dbConnection from '../db/connect';
 
 
-const commentRoutes = (server: Server) => {
+const commentRoutes = (server: Server, version: string) => {
 
     // Instantiate a custom database access object
     const Dao = new DAO(dbConnection);
@@ -20,11 +20,11 @@ const commentRoutes = (server: Server) => {
     // Instantiate a comment controller with the connected Database access object
     const controller = new CommentController(Dao);
 
-    server.get('/comments', controller.get);
-    server.get('/comments/:id', controller.getById);
-    server.post('/comments', controller.create);
-    server.put('/comments/:id', controller.update);
-    server.del('/comments/:id', controller.delete);
+    server.get(`/${version}/comments`, controller.get);
+    server.get(`/${version}/comments/:id`, controller.getById);
+    server.post(`/${version}/comments`, controller.create);
+    server.put(`/${version}/comments/:id`, controller.update);
+    server.del(`/${version}/comments/:id`, controller.delete);
 }
 
 export default commentRoutes;

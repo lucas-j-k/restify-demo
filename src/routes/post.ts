@@ -13,7 +13,7 @@ import dbConnection from '../db/connect';
 
 
 
-const postRoutes = (server: Server) => {
+const postRoutes = (server: Server, version: string) => {
 
     // Instantiate a custom database access object
     const Dao = new DAO(dbConnection);
@@ -21,11 +21,11 @@ const postRoutes = (server: Server) => {
     // Instantiate a comment controller with the connected Database access object
     const controller = new PostController(Dao);
 
-    server.get('/posts', controller.get);
-    server.get('/posts/:id', controller.getById);
-    server.post('/posts', controller.create);
-    server.put('/posts/:id', controller.update);
-    server.del('/posts/:id', controller.delete);
+    server.get(`/${version}/posts`, controller.get);
+    server.get(`/${version}/posts/:id`, controller.getById);
+    server.post(`/${version}/posts`, controller.create);
+    server.put(`/${version}/posts/:id`, controller.update);
+    server.del(`/${version}/posts/:id`, controller.delete);
 
 }
 

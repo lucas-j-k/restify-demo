@@ -22,8 +22,8 @@ server.use(restify.plugins.queryParser());
 
 
 // Initialise resource routes
-postRoutes(server);
-commentRoutes(server);
+postRoutes(server, 'v1');
+commentRoutes(server, 'v1');
 
 server.listen(8000, () => {
     console.log(`Server listening on port 8000`);
