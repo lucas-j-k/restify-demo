@@ -7,7 +7,7 @@
 
 import { Server } from 'restify';
 
-import PostController from '../controllers/Post';
+import PostController from '../controllers/post';
 import DAO from '../db/dao';
 import dbConnection from '../db/connect';
 

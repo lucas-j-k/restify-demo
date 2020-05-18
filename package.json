@@ -22,7 +22,7 @@
     "faker": "^4.1.0",
     "restify": "^8.5.1",
     "restify-errors": "^8.0.2",
-    "sqlite3": "^4.1.1"
+    "sqlite3": "^4.2.0"
   },
   "devDependencies": {
     "@types/faker": "^4.1.10",

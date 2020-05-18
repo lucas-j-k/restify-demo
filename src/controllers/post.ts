@@ -8,7 +8,7 @@ import {Request, Response, Next} from 'restify';
 import errs from 'restify-errors';
 import DAO from '../db/dao';
 
-import ConnectedController from './ConnectedController';
+import ConnectedController from './connectedController';
 import { newPostValidator, updatePostValidator } from '../validators/post';
 import { idValidator } from '../validators/generic';
 
