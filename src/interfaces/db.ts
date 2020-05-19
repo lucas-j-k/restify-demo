@@ -21,10 +21,6 @@ export interface Comment {
     post_id?: number,
 }
 
-export interface DbResult {
-   data: Array<{}>,
-}
-
 export interface MessageResult {
     message: string,
 }
