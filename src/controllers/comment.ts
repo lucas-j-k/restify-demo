@@ -11,6 +11,11 @@ import DAO from '../db/dao';
 import ConnectedController from './connectedController';
 import { newCommentValidator, updateCommentValidator, filterValidator } from '../validators/comment';
 import { idValidator } from '../validators/generic';
+import { 
+    buildSuccessResponse, 
+    buildErrorResponse,
+    buildServerErrorResponse
+} from '../util/responses';
 
 class CommentController extends ConnectedController {
 
@@ -26,7 +31,9 @@ class CommentController extends ConnectedController {
     public async get(req: Request, res: Response, next: Next){
         const { error } = filterValidator(req.query);
         if(error){
-            return next(new errs.BadRequestError(error.details[0].message));
+            const errorResponse = buildErrorResponse(new errs.BadRequestError(error.details[0].message));
+            res.json(errorResponse);
+            next();
         }
         const { user_id, post_id } = req.query;
         let conditionColumn, conditionValue;
@@ -41,10 +48,12 @@ class CommentController extends ConnectedController {
         const statement = `SELECT c.content, c.id, c.user_id, u.username FROM comments c INNER JOIN users u ON c.user_id = u.id WHERE ${conditionColumn} = ?`;
         try {
             const result = await this.DAO.all(statement, [conditionValue]);
-            res.json(result);
+            const successResponse = buildSuccessResponse(result);
+            res.json(successResponse);
             next();
-        } catch(e){
-            return next(new errs.InternalServerError(e.message));
+        } catch {
+            res.json(buildServerErrorResponse());
+            next();
         }
 
     }
@@ -52,27 +61,35 @@ class CommentController extends ConnectedController {
     public async getById(req: Request, res: Response, next: Next){      
         const { error } = idValidator(req.params);
         if(error){
-            return next(new errs.BadRequestError(error.details[0].message));
+            const errorResponse = buildErrorResponse(new errs.BadRequestError(error.details[0].message));
+            res.json(errorResponse);
+            next();
         }
         const { id } = req.params;
         const statement = 'SELECT c.content, c.id, c.user_id, u.username FROM comments c INNER JOIN users u ON c.user_id = u.id WHERE c.id = ?';
         try {
             const result = await this.DAO.get(statement, [id]);
-            if(result.data.length === 0) {
+            if(result.length === 0) {
                 next(new errs.NotFoundError('Resource not found'));
             } else {
-                res.json(result);
+                const successResponse = buildSuccessResponse(result);
+                res.json(successResponse);
                 next();
             }
-        } catch(e) {
-            return next(new errs.InternalServerError(e.message));
+        } catch {
+            res.json(buildServerErrorResponse());
+            next();
         }
     }
 
     public async create(req: Request, res: Response, next: Next) {
         // Validate request body
         const { error } = newCommentValidator(req.body);
-        if(error) return next(new errs.BadRequestError(error.details[0].message));
+        if(error) {
+            const errorResponse = buildErrorResponse(new errs.BadRequestError(error.details[0].message));
+            res.json(errorResponse);
+            next();
+        }
         const statement = 'INSERT INTO comments (user_id, post_id, content) VALUES (?,?,?)';
         const params = [
             req.body.user_id,
@@ -81,9 +98,12 @@ class CommentController extends ConnectedController {
         ];
         try {
             const result = await this.DAO.run(statement, params);
-            res.json(result);
-        } catch (e) {
-            return next(new errs.InternalServerError(e.message));
+            const successResponse = buildSuccessResponse();
+            res.json(successResponse);
+            next();
+        } catch {
+            res.json(buildServerErrorResponse());
+            next();
         }
     }
 
@@ -96,38 +116,48 @@ class CommentController extends ConnectedController {
         // Validate id and content
         const { error } = updateCommentValidator(requestParams);
         if(error) {
-            return next(new errs.BadRequestError(error.details[0].message));
+            const errorResponse = buildErrorResponse(new errs.BadRequestError(error.details[0].message));
+            res.json(errorResponse);
+            next();
         }
         const params = Object.values(requestParams);
         const statement = 'UPDATE comments SET content = ? WHERE id = ?';
         try {
             const existingRecord = await this.DAO.get('SELECT * FROM comments WHERE id = ?', req.params.id);
-            if(existingRecord.data.length === 0) {
+            if(existingRecord.length === 0) {
                 return next(new errs.NotFoundError('Resource not found'));
             }
             const result = await this.DAO.run(statement, params);
-            res.json(result);
-        } catch(e) {
-            return next(new errs.InternalServerError(e.message));
+            const successResponse = buildSuccessResponse();
+            res.json(successResponse);
+            next();
+        } catch {
+            res.json(buildServerErrorResponse());
+            next();
         }
     }
 
     public async delete(req: Request, res: Response, next: Next) {
         const { error } = idValidator(req.params);
         if(error){
-            return next(new errs.BadRequestError(error.details[0].message));
+            const errorResponse = buildErrorResponse(new errs.BadRequestError(error.details[0].message));
+            res.json(errorResponse);
+            next();
         }
         const { id } = req.params;
         const statement = 'DELETE from comments WHERE id = ?';
         try {
             const existingRecord = await this.DAO.get('SELECT * FROM comments WHERE id = ?', id);
-            if(existingRecord.data.length === 0) {
+            if(existingRecord.length === 0) {
                 return next(new errs.NotFoundError('Resource not found'));
             }
             const result = await this.DAO.run(statement, [id]);
-            res.json(result);
-        } catch (e) {
-            return next(new errs.InternalServerError(e.message));
+            const successResponse = buildSuccessResponse();
+            res.json(successResponse);
+            next();
+        } catch {
+            res.json(buildServerErrorResponse());
+            next();
         }
 
     }

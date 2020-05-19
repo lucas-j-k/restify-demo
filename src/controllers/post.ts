@@ -11,6 +11,11 @@ import DAO from '../db/dao';
 import ConnectedController from './connectedController';
 import { newPostValidator, updatePostValidator } from '../validators/post';
 import { idValidator } from '../validators/generic';
+import { 
+    buildSuccessResponse, 
+    buildErrorResponse, 
+    buildServerErrorResponse 
+} from '../util/responses';
 
 
 class PostController extends ConnectedController {
@@ -28,10 +33,12 @@ class PostController extends ConnectedController {
         const statement = 'SELECT p.content, p.title, p.id, u.username, u.id AS user_id FROM posts p INNER JOIN users u ON p.user_id = u.id';
         try {
             const result = await this.DAO.all(statement);
-            res.json(result);
+            const successResponse = buildSuccessResponse(result);
+            res.json(successResponse);
             next();
-        } catch(e) {
-            return next(new errs.InternalServerError(e.message));
+        } catch {
+            res.json(buildServerErrorResponse());
+            next();
         }
     }
 
@@ -46,14 +53,18 @@ class PostController extends ConnectedController {
         
         try {
             const result = await this.DAO.get(statement, [req.params.id]);
-            if(result.data.length === 0) {
-                next(new errs.NotFoundError('Resource not found'));
+            if(result.length === 0) {
+                const errorResponse = buildErrorResponse(new errs.NotFoundError('Resource not found'));
+                res.json(errorResponse);
+                next();
             } else {
-                res.json(result);
+                const successResponse = buildSuccessResponse(result);
+                res.json(successResponse);
                 next();
             }
-        } catch(e) {
-            return next(new errs.InternalServerError(e.message));
+        } catch {
+            res.json(buildServerErrorResponse());
+            next();
         }
     }
 
@@ -69,9 +80,12 @@ class PostController extends ConnectedController {
         ];
         try {
             const result = await this.DAO.run(statement, params);
-            res.json(result);
-        } catch (e) {
-            return next(new errs.InternalServerError(e.message));
+            const successResponse = buildSuccessResponse();
+            res.json(successResponse);
+            next();
+        } catch {
+            res.json(buildServerErrorResponse());
+            next();        
         }
     }
 
@@ -90,13 +104,18 @@ class PostController extends ConnectedController {
         const params = Object.values(requestParams);
         try {
             const existingRecord = await this.DAO.get('SELECT id FROM posts WHERE id = ?', req.params.id);
-            if(existingRecord.data.length === 0) {
-                return next(new errs.NotFoundError('Resource not found'));
+            if(existingRecord.length === 0) {
+                const errorResponse = buildErrorResponse(new errs.NotFoundError('Resource not found'));
+                res.json(errorResponse);
+                next();
             }
             const result = await this.DAO.run(statement, params);
-            res.json(result);
-        } catch(e) {
-            return next(new errs.InternalServerError(e.message));
+            const successResponse = buildSuccessResponse();
+            res.json(successResponse);
+            next();
+        } catch {
+            res.json(buildServerErrorResponse());
+            next();
         }
     }
 
@@ -109,13 +128,18 @@ class PostController extends ConnectedController {
         const statement = 'DELETE from posts WHERE id = ?';
         try {
             const existingRecord = await this.DAO.get('SELECT id FROM posts WHERE id = ?', id);
-            if(existingRecord.data.length === 0) {
-                return next(new errs.NotFoundError('Resource not found'));
+            if(existingRecord.length === 0) {
+                const errorResponse = buildErrorResponse(new errs.NotFoundError('Resource not found'));
+                res.json(errorResponse);
+                next();
             }
             const result = await this.DAO.run(statement, [id]);
-            res.json(result);
-        } catch (e) {
-            return next(new errs.InternalServerError(e.message));
+            const successResponse = buildSuccessResponse();
+            res.json(successResponse);
+            next();
+        } catch {
+            res.json(buildServerErrorResponse());
+            next();
         }
     }
 
