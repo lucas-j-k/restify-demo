@@ -25,6 +25,15 @@ server.use(restify.plugins.queryParser());
 postRoutes(server, 'v1');
 commentRoutes(server, 'v1');
 
+
+// Add healthcheck route
+server.get('/healthcheck', (req, res, next) => {
+	res.json({
+		message: 'OK',
+	});
+});
+
+
 server.listen(8000, () => {
     console.log(`Server listening on port 8000`);
 });
