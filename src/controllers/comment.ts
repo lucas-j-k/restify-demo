@@ -32,8 +32,9 @@ class CommentController extends ConnectedController {
         const { error } = filterValidator(req.query);
         if(error){
             const errorResponse = buildErrorResponse(new errs.BadRequestError(error.details[0].message));
+            res.status(400);
             res.json(errorResponse);
-            next();
+            return next();
         }
         const { user_id, post_id } = req.query;
         let conditionColumn, conditionValue;
@@ -45,7 +46,7 @@ class CommentController extends ConnectedController {
             conditionColumn = 'post_id';
             conditionValue = post_id;
         }
-        const statement = `SELECT c.content, c.id, c.user_id, u.username FROM comments c INNER JOIN users u ON c.user_id = u.id WHERE ${conditionColumn} = ?`;
+        const statement = `SELECT c.content, c.post_id, c.id, c.user_id, u.username FROM comments c INNER JOIN users u ON c.user_id = u.id WHERE ${conditionColumn} = ?`;
         try {
             const result = await this.DAO.all(statement, [conditionValue]);
             const successResponse = buildSuccessResponse(result);
@@ -53,7 +54,7 @@ class CommentController extends ConnectedController {
             next();
         } catch {
             res.json(buildServerErrorResponse());
-            next();
+            return next();
         }
 
     }
@@ -63,10 +64,10 @@ class CommentController extends ConnectedController {
         if(error){
             const errorResponse = buildErrorResponse(new errs.BadRequestError(error.details[0].message));
             res.json(errorResponse);
-            next();
+            return next();
         }
         const { id } = req.params;
-        const statement = 'SELECT c.content, c.id, c.user_id, u.username FROM comments c INNER JOIN users u ON c.user_id = u.id WHERE c.id = ?';
+        const statement = 'SELECT c.content, c.id, c.post_id, c.user_id, u.username FROM comments c INNER JOIN users u ON c.user_id = u.id WHERE c.id = ?';
         try {
             const result = await this.DAO.get(statement, [id]);
             if(result.length === 0) {
@@ -74,11 +75,11 @@ class CommentController extends ConnectedController {
             } else {
                 const successResponse = buildSuccessResponse(result);
                 res.json(successResponse);
-                next();
+                return next();
             }
         } catch {
             res.json(buildServerErrorResponse());
-            next();
+            return next();
         }
     }
 
@@ -88,7 +89,7 @@ class CommentController extends ConnectedController {
         if(error) {
             const errorResponse = buildErrorResponse(new errs.BadRequestError(error.details[0].message));
             res.json(errorResponse);
-            next();
+            return next();
         }
         const statement = 'INSERT INTO comments (user_id, post_id, content) VALUES (?,?,?)';
         const params = [
@@ -100,10 +101,10 @@ class CommentController extends ConnectedController {
             const result = await this.DAO.run(statement, params);
             const successResponse = buildSuccessResponse();
             res.json(successResponse);
-            next();
+            return next();
         } catch {
             res.json(buildServerErrorResponse());
-            next();
+            return next();
         }
     }
 
@@ -118,7 +119,7 @@ class CommentController extends ConnectedController {
         if(error) {
             const errorResponse = buildErrorResponse(new errs.BadRequestError(error.details[0].message));
             res.json(errorResponse);
-            next();
+            return next();
         }
         const params = Object.values(requestParams);
         const statement = 'UPDATE comments SET content = ? WHERE id = ?';
@@ -130,7 +131,7 @@ class CommentController extends ConnectedController {
             const result = await this.DAO.run(statement, params);
             const successResponse = buildSuccessResponse();
             res.json(successResponse);
-            next();
+            return next();
         } catch {
             res.json(buildServerErrorResponse());
             next();
@@ -142,7 +143,7 @@ class CommentController extends ConnectedController {
         if(error){
             const errorResponse = buildErrorResponse(new errs.BadRequestError(error.details[0].message));
             res.json(errorResponse);
-            next();
+            return next();
         }
         const { id } = req.params;
         const statement = 'DELETE from comments WHERE id = ?';

@@ -37,3 +37,5 @@ server.get('/healthcheck', (req, res, next) => {
 server.listen(8000, () => {
     console.log(`Server listening on port 8000`);
 });
+
+module.exports = server;

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "migrate": "node dist/db/migrations/index.js",
-    "dev": "./node_modules/.bin/tsc-watch --onCompilationComplete \"node dist/index.js\""
+    "dev": "./node_modules/.bin/tsc-watch --onCompilationComplete \"node dist/index.js\"",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",

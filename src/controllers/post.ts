@@ -35,8 +35,9 @@ class PostController extends ConnectedController {
             const result = await this.DAO.all(statement);
             const successResponse = buildSuccessResponse(result);
             res.json(successResponse);
-            next();
-        } catch {
+            return next();
+        } catch(e) {
+            console.log('ERROR - ', e);
             res.json(buildServerErrorResponse());
             next();
         }
