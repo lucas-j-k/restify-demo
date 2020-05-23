@@ -6,7 +6,6 @@
 
 import {Request, Response, Next} from 'restify';
 import errs from 'restify-errors';
-import DAO from '../db/dao';
 
 import ConnectedController from './connectedController';
 import { newCommentValidator, updateCommentValidator, filterValidator } from '../validators/comment';
@@ -19,7 +18,7 @@ import {
 
 class CommentController extends ConnectedController {
 
-    constructor(dao: DAO){
+    constructor(dao){
         super(dao);
         this.get = this.get.bind(this);
         this.getById = this.getById.bind(this);

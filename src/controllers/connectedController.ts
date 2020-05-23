@@ -7,9 +7,9 @@
 import DAO from '../db/dao';
 
 abstract class ConnectedController {
-    protected DAO : DAO;
+    protected DAO;
 
-    constructor(dao: DAO) {
+    constructor(dao) {
         this.DAO = dao;
     }
 }

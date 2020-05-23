@@ -8,17 +8,12 @@
 import { Server } from 'restify';
 
 import CommentController from '../controllers/comment';
-import DAO from '../db/dao';
-import dbConnection from '../db/connect';
-
+import connectedDAO from '../db/dao';
 
 const commentRoutes = (server: Server, version: string) => {
 
-    // Instantiate a custom database access object
-    const Dao = new DAO(dbConnection);
-
     // Instantiate a comment controller with the connected Database access object
-    const controller = new CommentController(Dao);
+    const controller = new CommentController(connectedDAO);
 
     server.get(`/${version}/comments`, controller.get);
     server.get(`/${version}/comments/:id`, controller.getById);
