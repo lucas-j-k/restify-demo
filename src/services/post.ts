@@ -10,8 +10,11 @@ import connectedDao from '../db/dao';
 import { 
     buildSuccessResponse, 
     buildErrorResponse, 
-    buildServerErrorResponse 
+    buildServerErrorResponse ,
+    errorResponses,
 } from '../util/responses';
+import { newPostValidator, updatePostValidator } from '../validators/post';
+import { idValidator } from '../validators/generic';
 
 
 const sql = {
@@ -23,6 +26,7 @@ const sql = {
 	checkIfExists: 'SELECT id FROM posts WHERE id = ?',
 }
 
+
 const postService = {
 	
 	/*
@@ -33,57 +37,104 @@ const postService = {
 			const result = await connectedDao.all(sql.getAll);
 			return buildSuccessResponse(result);
 		} catch {
-			return buildServerErrorResponse();
+			return errorResponses.internalServer;
 		}
 	},
 
 	/*
 	*	Get Single Post by ID
 	*/
-	getOne: async (id: number) => {
+	getOne: async (req) => {
+		const { error } = idValidator(req.params);
+        if(error) { return errorResponses.badRequest };
+
 		try {
-			const result = await connectedDao.get(sql.getOne, [id]);
+			const result = await connectedDao.get(sql.getOne, [req.params.id]);
+			console.log('Result -- ', result);
 			if(result.length === 0){
-				return buildErrorResponse(new errs.NotFoundError('Resource not found'));
-			}
+				return errorResponses.notFound;
+			};
+			connectedDao.close();
 			return buildSuccessResponse(result);
 		} catch {
-			return buildServerErrorResponse();
+			return errorResponses.internalServer;
 		}
 	},
 
 	/*
 	*	Create new Post record
 	*/
-	create: async (post) => {
+	create: async (req) => {
+		// Validate request
+		const { error } = newPostValidator(req.body);
+        if(error) return errorResponses.badRequest;
+
 		try {
-			const result = await connectedDao.run(sql.create, post);
+	        const postParams = [
+	            req.body.user_id,
+	            req.body.title,
+	            req.body.content
+	        ];
+			const result = await connectedDao.run(sql.create, postParams);
 			return buildSuccessResponse();
 		} catch {
-			return buildServerErrorResponse();
+			return errorResponses.internalServer;
 		}
 	},
 
 	/*
 	*	Update single Post by ID
 	*/
-	update: async (id: number, updatedPost) => {
+	update: async (req) => {
+
+        const updatePostBody = {
+            title: req.body.title,
+            content: req.body.content,
+            id: req.params.id,
+        }; 
+
+        // Validate request params
+        const { error } = updatePostValidator(updatePostBody);
+        if(error) {
+            return errorResponses.badRequest;
+        }
+
+        const updatePostParams = [
+            updatePostBody.title,
+            updatePostBody.content,
+            updatePostBody.id,
+        ];
+
 		try {
-			const existingRecord = await connectedDao.get(sql.checkIfExists);
+			const existingRecord =  await connectedDao.get(sql.checkIfExists);
 			if(existingRecord.length === 0) {
-				return buildErrorResponse(new errs.NotFoundError('Resource not found'));
+				return errorResponses.notFound;
 			};
-			const result = await connectedDao.run(sql.create, updatedPost);
+			const result = await connectedDao.run(sql.create, updatePostParams);
+			return buildSuccessResponse();
 		} catch {
-			return buildServerErrorResponse();
+			return errorResponses.internalServer;
 		}
 	},
 
 	/*
 	*	Delete Single Post by ID
 	*/
-	delete: async (id: number) => {
-		
+	delete: async (req) => {
+        const { error } = idValidator(req.params);
+        if(error){
+            return errorResponses.badRequest;
+        }
+        try {
+            const existingRecord = await connectedDao.get(sql.checkIfExists);
+            if(existingRecord.length === 0) {
+                return errorResponses.notFound;
+            };
+            const result = await connectedDao.run(sql.delete, [req.params.id]);
+            return buildSuccessResponse();
+        } catch {
+        	return errorResponses.internalServer;
+        }
 	},
 
 }

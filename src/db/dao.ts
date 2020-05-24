@@ -5,7 +5,7 @@
 */
 
 import { Database } from 'sqlite3';
-import dbConnection from './connect';
+import connect from './connect';
 
 import { MessageResult } from '../interfaces/db';
 
@@ -58,6 +58,6 @@ class Dao {
     
 }
 
-const connectedDAO = new Dao(dbConnection);
+const connectedDAO = new Dao(connect);
 
 export default connectedDAO;

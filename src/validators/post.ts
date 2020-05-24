@@ -5,8 +5,12 @@
     -----------------------------------
  */
 
-import Joi from '@hapi/joi';
 
+import Joi from '@hapi/joi';
+import {
+    buildErrorResponse, 
+    buildServerErrorResponse 
+} from '../util/responses';
 import { Post } from '../interfaces/db';
 
 export const newPostValidator = (data: Post) => {

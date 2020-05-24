@@ -8,13 +8,12 @@
 import { Server } from 'restify';
 
 import PostController from '../controllers/post';
-import connectedDAO from '../db/dao';
 
 
 const postRoutes = (server: Server, version: string) => {
 
     // Instantiate a comment controller with the connected Database access object
-    const controller = new PostController(connectedDAO);
+    const controller = new PostController();
 
     server.get(`/${version}/posts`, controller.get);
     server.get(`/${version}/posts/:id`, controller.getById);
