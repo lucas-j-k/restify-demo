@@ -6,7 +6,7 @@
 
 import faker from 'faker';
 
-import dbConnection from '../connect';
+import connectedDao from '../dao';
 
 const createStatement: string = `
     CREATE TABLE IF NOT EXISTS users (
@@ -18,24 +18,27 @@ const createStatement: string = `
     )
 `;
 
-const migrate = (): void => {
-    //Serialize executes statements in sequence
-    dbConnection.serialize(()=>{
+const migrate = async () => {
 
+    try {
+        console.log('Creating user table');
         // Create Users Table
-        dbConnection.run(createStatement);
+        const x = await connectedDao.run(createStatement);
+        console.log('X', x);
+        console.log('Finished creating user table');
 
         // Insert Seed Data in a loop
-        var insertStatement = dbConnection.prepare("INSERT INTO users VALUES (?,?,?,?,?)");
+        const insertStatement = 'INSERT INTO users VALUES (?,?,?,?,?)';
         for(let i = 1; i <= 5; i++){
             const email: string  = faker.internet.email();
             const firstName: string = faker.name.firstName();
             const surname: string = faker.name.lastName();
             const username: string = faker.internet.userName();
-            insertStatement.run(i, email, firstName, surname, username);
+            await connectedDao.run(insertStatement, [i, email, firstName, surname, username]);
         }
-        insertStatement.finalize();
-})
-}
+    } catch (e) {
+        console.log('Caught error - ', e);
+    }
+};
 
 export default migrate;

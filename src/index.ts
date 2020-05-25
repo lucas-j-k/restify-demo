@@ -40,6 +40,12 @@ server.get('/healthcheck', (req, res, next) => {
 	});
 });
 
+// Catch-all route for errors
+server.on('restifyError', (req, res, err, cb) => {
+  req.log.error(err);
+  return cb();
+});
+
 
 server.listen(port, () => {
     console.log(`Server listening on port ${port}`);

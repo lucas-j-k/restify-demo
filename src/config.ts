@@ -4,10 +4,6 @@
 *
 */
 
-const configInterface = {
-	
-};
-
 const config = {
 	development: {
 		dbName: 'database.sqlite',

@@ -4,7 +4,7 @@
 *
 */
 
-import dbConnection from '../connect';
+import connectedDao from '../dao';
 
 const tables: Array<string> = [
     'users',
@@ -12,14 +12,11 @@ const tables: Array<string> = [
     'comments',
 ];
 
-const migrate = () => {
-    //Serialize executes statements in sequence
-    dbConnection.serialize(()=>{
-        console.log('Dropping tables: ', tables.join(' | '));
-        tables.forEach((table: string) => {
-            dbConnection.run(`DROP TABLE IF EXISTS ${table}`);
-        });
-    })
+const migrate = async () => {
+    console.log('Dropping tables: ', tables.join(' | '));
+    tables.forEach(async (table: string) => {
+        await connectedDao.run(`DROP TABLE IF EXISTS ${table}`);
+    });
 }
 
 export default migrate;

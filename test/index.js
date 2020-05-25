@@ -9,8 +9,7 @@ const chaiHTTP = require('chai-http');
 const should = chai.should();
 
 const server = require('../dist/index.js');
-
-
+const runMigrations = require('../dist/db/migrations/index.js');
 
 // Initialise Chai HTTP requests
 chai.use(chaiHTTP);
@@ -19,8 +18,8 @@ chai.use(chaiHTTP);
 /*
 *	Healthcheck
 */
-describe('GET Healthcheck', () => {
-	it('Should return a 200 OK from the healthcheck route', (done) => {
+describe('HEALTHCHECK', function() {
+	it('Should return a 200 OK from a GET on the healthcheck route', function(done) {
 		chai.request(server)
 			.get('/healthcheck')
 			.end((err, res) => {
@@ -70,6 +69,12 @@ describe('RESOURCE - POSTS', () => {
 					done();
 				})
 		});
+
+		// Return correct status error when resource doesn't exist
+		it('should return a 404 when resource is not found');
+
+		it('should return a 400 bad request if the ID parameter is not an integer');
+
 	});
 
 
@@ -79,9 +84,9 @@ describe('RESOURCE - POSTS', () => {
 
 
 
-/*
-*	Comments Tests
-*/
+// /*
+// *	Comments Tests
+// */
 describe('RESOURCE - COMMENTS', () => {
 
 	describe('GET /v1/comments', () =>{

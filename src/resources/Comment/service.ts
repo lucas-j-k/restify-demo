@@ -64,7 +64,7 @@ const commentService = {
 			return errorResponses.badRequest;
 		};
 		try {
-			const result = await connectedDao.all(sql.getOne, [req.params.id]);
+			const result = await connectedDao.get(sql.getOne, [req.params.id]);
 			if(result.length === 0){
 				return errorResponses.notFound;
 			};

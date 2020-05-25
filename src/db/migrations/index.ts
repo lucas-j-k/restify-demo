@@ -9,21 +9,24 @@ import migrateUsers from './create-users';
 import migratePosts from './create-posts';
 import migrateComments from './create-comments';
 
-const runMigrations = (): void => {
+const runMigrations = async () => {
     try {
         console.log('Resetting DB...');
-        resetDb();
+        await resetDb();
         console.log('Migrating Users Table...');
-        migrateUsers();
+        await migrateUsers();
         console.log('Migrating Posts Table...');
-        migratePosts();
+        await migratePosts();
         console.log('Migrating Comments Table...');
-        migrateComments();
+        await migrateComments();
         console.log('Database ready');
+        return false;
     } catch(e){
         console.log("Error running migrations: ", e);
     }
 
 }
 
-runMigrations();
+
+// Export for testing
+module.exports = runMigrations;

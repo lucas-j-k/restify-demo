@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "migrate": "node dist/db/migrations/index.js",
+    "migrate": "node dist/db/migrations/run.js",
     "dev": "./node_modules/.bin/tsc-watch --onCompilationComplete \"node dist/index.js\"",
     "test": "env ENVIRONMENT=testing mocha"
   },
