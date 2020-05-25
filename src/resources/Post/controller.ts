@@ -9,58 +9,57 @@ import { Request, Response, Next } from 'restify';
 import service from './service';
 
 
-class PostController {
+const postController = {
 
     /*
     *   Get all Posts
     */
-    public async getAll (req: Request, res: Response, next: Next) {
+    getAll: async (req: Request, res: Response, next: Next) => {
         const result = await service.getAll();
         res.status(result.status);
         res.json(result);
         return next();
-    }
+    },
 
 
     /*
     *   Get single Post by ID
     */
-    public async getById (req: Request, res: Response, next: Next) {
+    getById: async (req: Request, res: Response, next: Next) => {
         const result = await service.getOne(req);
         res.status(result.status);
         res.json(result);
         return next();
-    }
+    },
 
     /*
     *   Create new Post record
     */
-    public async create (req: Request, res: Response, next: Next) {   
+    create: async (req: Request, res: Response, next: Next) => {   
         const result = await service.create(req);
         res.json(result);
         return next();        
-    }
+    },
 
     /*
     *   Update an existing Post record
     */
-    public async update (req: Request, res: Response, next: Next) {
+    update: async (req: Request, res: Response, next: Next) => {
         const result = await service.update(req);
         res.status(result.status);
         res.json(result);
         next();
-    }
+    },
 
     /*
     *   Delete an existing Post record
     */
-    public async delete (req: Request, res: Response, next: Next) {
+    delete: async (req: Request, res: Response, next: Next) => {
             const result = await service.delete(req);
             res.status(result.status);
             res.json(result);
             next();
-    }
+    },
 
 }
-
-export default PostController;
+export default postController;

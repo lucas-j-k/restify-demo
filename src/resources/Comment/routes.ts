@@ -6,12 +6,9 @@
 
 import { Server } from 'restify';
 
-import CommentController from './controller';
+import controller from './controller';
 
 const commentRoutes = (server: Server) => {
-
-    // Instantiate a comment controller with the connected Database access object
-    const controller = new CommentController();
 
     server.get(`/v1/comments`, controller.getAll);
     server.get(`/v1/comments/:id`, controller.getOne);
