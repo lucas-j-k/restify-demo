@@ -7,7 +7,7 @@
 import { Database } from 'sqlite3';
 import connect from './connect';
 
-import { MessageResult } from '../interfaces/db';
+// import { MessageResult } from '../interfaces/db';
 
 class Dao {
 
@@ -43,7 +43,7 @@ class Dao {
         })
     }
 
-    public run(statement: string, args: Array<any> = []): Promise<MessageResult>{
+    public run(statement: string, args: Array<any> = []): Promise<Object>{
         return new Promise(async (resolve, reject) => {
             this.dbConnection.run(statement, args, (err: Error) => {
                 if(err){

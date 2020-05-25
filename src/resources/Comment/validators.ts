@@ -5,8 +5,6 @@
 */
 
 import Joi from '@hapi/joi';
-import { Post } from '../../interfaces/db';
-
 
 // Validate a request based on an ID param
 const idValidator = (data: object) => {

@@ -59,7 +59,7 @@ const commentService = {
 	*	Get single comment by ID
 	*/
 	getOne: async (req: Request) => {
-		const { error } = validators.getOne(req.query);
+		const { error } = validators.getOne(req.params);
 		if(error) {
 			return errorResponses.badRequest;
 		};
