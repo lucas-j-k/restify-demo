@@ -9,8 +9,8 @@
 import restify, {Request} from 'restify';
 
 import dao from './db/dao';
-import postRoutes from './routes/post';
-import commentRoutes from './routes/comment';
+import postRoutes from './resources/Post/routes';
+import commentRoutes from './resources/Comment/routes';
 
 // Initialise Restify server
 const server = restify.createServer();
@@ -25,7 +25,7 @@ postRoutes(server, 'v1');
 commentRoutes(server, 'v1');
 
 
-// Add healthcheck route
+// Register healthcheck route for testing
 server.get('/healthcheck', (req, res, next) => {
 	res.json({
 		message: 'OK',

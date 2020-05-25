@@ -1,11 +1,12 @@
 /*
 *
-* Post Controller - define Resource methods
+*	POST RESOURCE - controller
 *
 */
 
-import {Request, Response, Next} from 'restify';
-import service from '../services/post';
+
+import { Request, Response, Next } from 'restify';
+import service from './service';
 
 
 class PostController {
@@ -13,8 +14,9 @@ class PostController {
     /*
     *   Get all Posts
     */
-    public async get (req: Request, res: Response, next: Next) {
+    public async getAll (req: Request, res: Response, next: Next) {
         const result = await service.getAll();
+        res.status(result.status);
         res.json(result);
         return next();
     }

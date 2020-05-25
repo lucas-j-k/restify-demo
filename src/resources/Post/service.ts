@@ -1,20 +1,12 @@
 /*
 *
-*	Post Service
+*	POST RESOURCE - service
 *
 */
 
-import errs from 'restify-errors';
-
-import connectedDao from '../db/dao';
-import { 
-    buildSuccessResponse, 
-    buildErrorResponse, 
-    buildServerErrorResponse ,
-    errorResponses,
-} from '../util/responses';
-import { newPostValidator, updatePostValidator } from '../validators/post';
-import { idValidator } from '../validators/generic';
+import connectedDao from '../../db/dao';
+import { buildSuccessResponse, errorResponses } from '../../util/responses';
+import validators from './validators'
 
 
 const sql = {
@@ -22,7 +14,7 @@ const sql = {
 	getOne: 'SELECT p.title, p.content, p.id, u.id AS user_id, u.username FROM posts p INNER JOIN users u ON p.user_id = u.id WHERE p.id = ?',
 	create: 'INSERT INTO posts (user_id, title, content) VALUES (?,?,?)',
 	update: 'UPDATE posts SET title = ?, content = ? WHERE id = ?',
-	delete: '',
+	delete: 'DELETE from posts WHERE id = ?',
 	checkIfExists: 'SELECT id FROM posts WHERE id = ?',
 }
 
@@ -45,18 +37,16 @@ const postService = {
 	*	Get Single Post by ID
 	*/
 	getOne: async (req) => {
-		const { error } = idValidator(req.params);
+		const { error } = validators.getOne(req.params);
         if(error) { return errorResponses.badRequest };
 
 		try {
 			const result = await connectedDao.get(sql.getOne, [req.params.id]);
-			console.log('Result -- ', result);
 			if(result.length === 0){
 				return errorResponses.notFound;
 			};
-			connectedDao.close();
 			return buildSuccessResponse(result);
-		} catch {
+		} catch(e) {
 			return errorResponses.internalServer;
 		}
 	},
@@ -66,7 +56,7 @@ const postService = {
 	*/
 	create: async (req) => {
 		// Validate request
-		const { error } = newPostValidator(req.body);
+		const { error } = validators.create(req.body);
         if(error) return errorResponses.badRequest;
 
 		try {
@@ -94,7 +84,7 @@ const postService = {
         }; 
 
         // Validate request params
-        const { error } = updatePostValidator(updatePostBody);
+        const { error } = validators.update(updatePostBody);
         if(error) {
             return errorResponses.badRequest;
         }
@@ -121,7 +111,7 @@ const postService = {
 	*	Delete Single Post by ID
 	*/
 	delete: async (req) => {
-        const { error } = idValidator(req.params);
+        const { error } = validators.delete(req.params);
         if(error){
             return errorResponses.badRequest;
         }
