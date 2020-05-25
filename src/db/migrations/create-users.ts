@@ -21,11 +21,9 @@ const createStatement: string = `
 const migrate = async () => {
 
     try {
-        console.log('Creating user table');
+
         // Create Users Table
-        const x = await connectedDao.run(createStatement);
-        console.log('X', x);
-        console.log('Finished creating user table');
+        await connectedDao.run(createStatement);
 
         // Insert Seed Data in a loop
         const insertStatement = 'INSERT INTO users VALUES (?,?,?,?,?)';

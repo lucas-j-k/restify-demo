@@ -46,14 +46,22 @@ describe('RESOURCE - POSTS', () => {
 					res.body.should.be.a('object');
 					res.body.should.have.property('data');
 					res.body.data.should.be.a('array');
+					res.body.data.forEach(post => {
+						post.should.have.property('id');
+						post.should.have.property('content');
+						post.should.have.property('user_id');
+						post.should.have.property('username');
+						post.should.have.property('content');
+						post.content.should.be.a('string');
+					});
 					done();
 				})
 		});
 	});
 
 	describe('GET /v1/posts/{id}', () => {
-		// Get single Post
-		it('should return a single post object', (done) => {
+
+		it('should return a single post object, with the id property matching the url parameter', (done) => {
 			chai.request(server)
 				.get('/v1/posts/1')
 				.end((err, res) => {
@@ -70,11 +78,46 @@ describe('RESOURCE - POSTS', () => {
 				})
 		});
 
-		// Return correct status error when resource doesn't exist
-		it('should return a 404 when resource is not found');
+		it('should fail with a 404 when resource is not found', function(done){
+			chai.request(server)
+			.get('/v1/posts/1000')
+			.end((err, res) => {
+				res.should.have.status(404);
+				done();
+			});
+		});
 
-		it('should return a 400 bad request if the ID parameter is not an integer');
+		it('should fail with a 400 bad request if the ID parameter is not an integer', function(done){
+			chai.request(server)
+			.get('/v1/posts/one')
+			.end((err, res) => {
+				res.should.have.status(400);
+				done();
+			});
+		});
 
+	});
+
+	describe('POST /v1/posts', function() {
+		it('should insert a new post record to the database');
+		it('should fail when user_id is missing');
+		it('should fail when title is missing');
+		it('should fail when content is missing');
+	});
+
+	describe('UPDATE /v1/posts/{id}', function() {
+		it('should update title field on an existing post record');
+		it('should fail with a 404 when the targeted resource does not exist');
+		it('should fail with a 400 when the id parameter is not an integer');
+		it('should fail when title is missing from body');		
+		it('should fail when content is missing from body');
+	});
+
+	describe('DELETE /v1/posts', function() {
+		it('should successfully delete the targeted post record');
+		it('should fail with a 404 when targeted record does not exist');
+		it('should fail with a 400 when the id parameter is not an integer');
+		it('should fail when title is missing');
 	});
 
 
@@ -84,9 +127,9 @@ describe('RESOURCE - POSTS', () => {
 
 
 
-// /*
-// *	Comments Tests
-// */
+/*
+*	Comments Tests
+*/
 describe('RESOURCE - COMMENTS', () => {
 
 	describe('GET /v1/comments', () =>{
@@ -119,6 +162,12 @@ describe('RESOURCE - COMMENTS', () => {
 				});
 		});
 	});
+
+	// Return 404 error when resource doesn't exist
+	it('should return a 404 when resource is not found');
+
+	// Reject request if the ID in the url is not an integer
+	it('should return a 400 bad request if the ID parameter is not an integer');
 
 	describe('GET /v1/comments?user_id={id}', () =>{
 		// Get all Comments by user Id
