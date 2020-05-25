@@ -3,13 +3,14 @@
 *	COMMENT RESOURCE - service
 *
 */
+import { Request } from 'restify';
 
 import connectedDao from '../../db/dao';
 import { buildSuccessResponse, errorResponses } from '../../util/responses';
 import validators from './validators';
 
 const sql = {
-	getAll: conditionColumn => `SELECT c.content, c.post_id, c.id, c.user_id, u.username FROM comments c INNER JOIN users u ON c.user_id = u.id WHERE ${conditionColumn} = ?`,
+	getAll: (conditionColumn: string) => `SELECT c.content, c.post_id, c.id, c.user_id, u.username FROM comments c INNER JOIN users u ON c.user_id = u.id WHERE ${conditionColumn} = ?`,
 	getOne: 'SELECT c.content, c.id, c.post_id, c.user_id, u.username FROM comments c INNER JOIN users u ON c.user_id = u.id WHERE c.id = ?',
 	create: 'INSERT INTO comments (user_id, post_id, content) VALUES (?,?,?)',
 	update: 'UPDATE comments SET content = ? WHERE id = ?',
@@ -23,14 +24,15 @@ const commentService = {
 	/*
 	*	Get All Comments associated with a user_id or post_id
 	*/
-	getAll: async (req) => {
+	getAll: async (req: Request) => {
 		const { error } = validators.getAll(req.query);
 		if(error) {
 			return errorResponses.badRequest;
 		};
 
 		const { user_id, post_id } = req.query;
-        let conditionColumn, conditionValue;
+        let conditionColumn = '';
+        let conditionValue = null;
 
         if(user_id){
             conditionColumn = 'user_id';
@@ -56,7 +58,7 @@ const commentService = {
 	/*
 	*	Get single comment by ID
 	*/
-	getOne: async (req) => {
+	getOne: async (req: Request) => {
 		const { error } = validators.getOne(req.query);
 		if(error) {
 			return errorResponses.badRequest;
@@ -75,7 +77,7 @@ const commentService = {
 	/*
 	*	Create new comment record	
 	*/
-	create: async (req) => {
+	create: async (req: Request) => {
 		const { error } = validators.create(req.body);
 		if(error) {
 			return errorResponses.badRequest;
@@ -89,7 +91,7 @@ const commentService = {
 
 		try {
 			const result = await connectedDao.run(sql.create, params);
-			return buildSuccessResponse(result);
+			return buildSuccessResponse();
 		} catch {
 			return errorResponses.internalServer;
 		}
@@ -98,7 +100,7 @@ const commentService = {
 	/*
 	*	Update existing comment record by ID	
 	*/
-	update: async (req) => {
+	update: async (req: Request) => {
 		const updateData = {
             content: req.body.content,
             id: req.params.id,
@@ -116,7 +118,7 @@ const commentService = {
 				return errorResponses.notFound;
 			}
 			const result = await connectedDao.run(sql.update, updateParams);
-			return buildSuccessResponse(result);
+			return buildSuccessResponse();
 		} catch {
 			return errorResponses.internalServer;
 		}
@@ -125,7 +127,7 @@ const commentService = {
 	/*
 	*	Delete single comment by ID	
 	*/
-	delete: async (req) => {
+	delete: async (req: Request) => {
 		const { error } = validators.delete(req);
 		if(error) {
 			return errorResponses.badRequest;

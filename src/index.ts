@@ -21,8 +21,8 @@ server.use(restify.plugins.queryParser());
 
 
 // Initialise resource routes
-postRoutes(server, 'v1');
-commentRoutes(server, 'v1');
+postRoutes(server);
+commentRoutes(server);
 
 
 // Register healthcheck route for testing

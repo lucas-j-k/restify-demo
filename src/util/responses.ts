@@ -1,44 +1,34 @@
 /*
 *
-*	Response Objects
+*	Standard Response Objects
 *
 */
 
-import errs, { HttpError } from 'restify-errors';
+import errs from 'restify-errors';
 
+/*
+*	Build a successful server response object, including any fetched DB rows
+*/
 export const buildSuccessResponse = (data?: []) => ({
 	status: 200,
 	data,
 });
 
 
-export const buildErrorResponse = (err: HttpError) => ({
-	message: 'Error Occurred',
-	error: err.body,
-});
-
-export const buildServerErrorResponse = () => {
-	const err = new errs.InternalServerError('Internal Server Error');
-	return {
-		message: 'Error Occurred',
-		error: err.body,
-	};
-}
-
-
-export const buildError = (statusCode: number, errorMessage: string) => ({
-	status: statusCode,
+/*
+*	Build an error server response
+*/
+export const buildError = (status: number, message: string) => ({
+	status: status,
 	error: {
-		message: errorMessage,
+		message: message,
 	}
 });
-
 
 
 /*
 *	Define Individual Errors
 */
-
 export const errorResponses = {
 	notFound: buildError(404, 'Resource not found'),
 	badRequest: buildError(400, 'Bad request. Check query string parameters or request body'),

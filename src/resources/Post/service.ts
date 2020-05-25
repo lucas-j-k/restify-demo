@@ -3,6 +3,7 @@
 *	POST RESOURCE - service
 *
 */
+import { Request } from 'restify';
 
 import connectedDao from '../../db/dao';
 import { buildSuccessResponse, errorResponses } from '../../util/responses';
@@ -36,7 +37,7 @@ const postService = {
 	/*
 	*	Get Single Post by ID
 	*/
-	getOne: async (req) => {
+	getOne: async (req: Request) => {
 		const { error } = validators.getOne(req.params);
         if(error) { return errorResponses.badRequest };
 
@@ -54,7 +55,7 @@ const postService = {
 	/*
 	*	Create new Post record
 	*/
-	create: async (req) => {
+	create: async (req: Request) => {
 		// Validate request
 		const { error } = validators.create(req.body);
         if(error) return errorResponses.badRequest;
@@ -75,7 +76,7 @@ const postService = {
 	/*
 	*	Update single Post by ID
 	*/
-	update: async (req) => {
+	update: async (req: Request) => {
 
         const updatePostBody = {
             title: req.body.title,
@@ -110,7 +111,7 @@ const postService = {
 	/*
 	*	Delete Single Post by ID
 	*/
-	delete: async (req) => {
+	delete: async (req: Request) => {
         const { error } = validators.delete(req.params);
         if(error){
             return errorResponses.badRequest;
