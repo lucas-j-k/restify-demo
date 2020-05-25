@@ -15,11 +15,11 @@ const postRoutes = (server: Server, version: string) => {
     // Instantiate a comment controller with the connected Database access object
     const controller = new PostController();
 
-    server.get(`/${version}/posts`, controller.getAll);
-    server.get(`/${version}/posts/:id`, controller.getById);
-    server.post(`/${version}/posts`, controller.create);
-    server.put(`/${version}/posts/:id`, controller.update);
-    server.del(`/${version}/posts/:id`, controller.delete);
+    server.get(`/v1/posts`, controller.getAll);
+    server.get(`/v1/posts/:id`, controller.getById);
+    server.post(`/v1/posts`, controller.create);
+    server.put(`/v1/posts/:id`, controller.update);
+    server.del(`/v1/posts:id`, controller.delete);
 
 }
 
