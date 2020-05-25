@@ -18,7 +18,7 @@ export const buildSuccessResponse = (data?: []) => ({
 /*
 *	Build an error server response
 */
-export const buildError = (status: number, message: string) => ({
+const buildError = (status: number, message: string) => ({
 	status: status,
 	error: {
 		message: message,
