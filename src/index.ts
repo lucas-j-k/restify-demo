@@ -5,12 +5,20 @@
 *
 */
 
+// Load ENV variables
+const dotenv = require("dotenv").config();
 
 import restify, {Request} from 'restify';
 
+import config from './config';
 import dao from './db/dao';
 import postRoutes from './resources/Post/routes';
 import commentRoutes from './resources/Comment/routes';
+
+// Read port from config based on environment
+const environment = process.env.ENVIRONMENT || 'development';
+const port = config[environment].port;
+
 
 // Initialise Restify server
 const server = restify.createServer();
@@ -33,8 +41,8 @@ server.get('/healthcheck', (req, res, next) => {
 });
 
 
-server.listen(8000, () => {
-    console.log(`Server listening on port 8000`);
+server.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
 });
 
 module.exports = server;

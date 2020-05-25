@@ -6,7 +6,7 @@
   "scripts": {
     "migrate": "node dist/db/migrations/index.js",
     "dev": "./node_modules/.bin/tsc-watch --onCompilationComplete \"node dist/index.js\"",
-    "test": "mocha"
+    "test": "env ENVIRONMENT=testing mocha"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/lucas-j-k/restify-demo#readme",
   "dependencies": {
     "@hapi/joi": "^17.1.0",
+    "dotenv": "^8.2.0",
     "faker": "^4.1.0",
     "restify": "^8.5.1",
     "restify-errors": "^8.0.2",
@@ -32,6 +33,9 @@
     "@types/restify": "^8.4.2",
     "@types/restify-errors": "^4.3.3",
     "@types/sqlite3": "^3.1.6",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "mocha": "^7.2.0",
     "tsc-watch": "^4.2.0",
     "types-joi": "^2.0.1",
     "typescript": "^3.8.2"
