@@ -17,15 +17,17 @@ const createStatement: string = `
     )
 `;
 
-const migrate = async () => {
+const migrate = async (users: number, postsPerUser: number) => {
 
     // Create Posts Table 
     await connectedDao.run(createStatement);
+
+    // Insert 5 posts for every user in the table
     const insertStatement = "INSERT INTO posts (user_id, title, content) VALUES (?,?,?)";
-    for(let i = 1; i <= 5; i++){
+    for(let i = 1; i <= users; i++){
         // Cycle through 5 users
-        for(let j = 1; j <= 5; j++){
-            // Create 5 posts for current user
+        for(let j = 1; j <= postsPerUser; j++){
+            // Create 5 posts for current user in the loop
             const sentenceCount: number = Math.floor(Math.random() * 16) + 5;
             const user_id: number = i;
             const title: string = faker.lorem.sentence();

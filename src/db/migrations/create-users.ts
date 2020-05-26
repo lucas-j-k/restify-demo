@@ -18,7 +18,7 @@ const createStatement: string = `
     )
 `;
 
-const migrate = async () => {
+const migrate = async (users: number) => {
 
     try {
 
@@ -27,7 +27,7 @@ const migrate = async () => {
 
         // Insert Seed Data in a loop
         const insertStatement = 'INSERT INTO users VALUES (?,?,?,?,?)';
-        for(let i = 1; i <= 5; i++){
+        for(let i = 1; i <= users; i++){
             const email: string  = faker.internet.email();
             const firstName: string = faker.name.firstName();
             const surname: string = faker.name.lastName();

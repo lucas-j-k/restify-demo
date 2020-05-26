@@ -17,7 +17,10 @@ const createStatement: string = `
     )
 `;
 
-const migrate = async () => {
+const migrate = async (users: number, postsPerUser: number, comments: number) => {
+
+    // Calculate total number of posts, so we can limit the post_id generation
+    const totalNumberOfPosts = users * postsPerUser;
 
     // Create Comments Table
     await connectedDao.run(createStatement);
@@ -25,10 +28,10 @@ const migrate = async () => {
     // Insert Seed Data in a loop. Generate 5 posts for each user ID from 1 - 5
     const insertStatement = 'INSERT INTO comments (user_id, post_id, content) VALUES (?,?,?)';
 
-    for(let i = 1; i <= 40; i++){
+    for(let i = 1; i <= comments; i++){
         const sentenceCount: number = faker.random.number({min:1, max:15});
-        const user_id: number = faker.random.number({min:1, max:5});
-        const post_id: number = faker.random.number({min:1, max:25});
+        const user_id: number = faker.random.number({min:1, max: users});
+        const post_id: number = faker.random.number({min:1, max: totalNumberOfPosts});
         const content: string = faker.lorem.sentences(sentenceCount);
         await connectedDao.run(insertStatement, [user_id, post_id, content]);
     }
