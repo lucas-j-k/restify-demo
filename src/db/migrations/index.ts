@@ -18,7 +18,7 @@ interface configObject {
 
 const runMigrations = async (config: configObject) => {
     console.log(`
-        Seeding Database
+        Seeding Database in [${process.env.ENVIRONMENT}] Mode
         ------------------------------------------------
         Number of users: ${config.users}
         Number of posts per user: ${config.postsPerUser}

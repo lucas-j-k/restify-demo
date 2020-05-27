@@ -37,6 +37,7 @@ const postController = {
     */
     create: async (req: Request, res: Response, next: Next) => {   
         const result = await service.create(req);
+        res.status(result.status);
         res.json(result);
         return next();        
     },

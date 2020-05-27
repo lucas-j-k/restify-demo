@@ -56,9 +56,12 @@ const postService = {
 	*	Create new Post record
 	*/
 	create: async (req: Request) => {
+
 		// Validate request
 		const { error } = validators.create(req.body);
-        if(error) return errorResponses.badRequest;
+        if(error) {
+        	return errorResponses.badRequest;
+        }
 
 		try {
 	        const postParams = [
@@ -97,11 +100,11 @@ const postService = {
         ];
 
 		try {
-			const existingRecord =  await connectedDao.get(sql.checkIfExists);
+			const existingRecord =  await connectedDao.get(sql.checkIfExists, [req.params.id]);
 			if(existingRecord.length === 0) {
 				return errorResponses.notFound;
 			};
-			const result = await connectedDao.run(sql.create, updatePostParams);
+			const result = await connectedDao.run(sql.update, updatePostParams);
 			return buildSuccessResponse();
 		} catch {
 			return errorResponses.internalServer;
@@ -117,7 +120,7 @@ const postService = {
             return errorResponses.badRequest;
         }
         try {
-            const existingRecord = await connectedDao.get(sql.checkIfExists);
+            const existingRecord = await connectedDao.get(sql.checkIfExists, [req.params.id]);
             if(existingRecord.length === 0) {
                 return errorResponses.notFound;
             };
