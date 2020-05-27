@@ -9,9 +9,9 @@ const runMigrations = require('../dist/db/migrations/index.js');
 
 // Define config to determine what data is inserted into our test database:
 const seedConfig = {
-	users: 2,
-	postsPerUser: 2,
-	comments: 10
+	users: 1,
+	postsPerUser: 1,
+	comments: 5,
 };
 
 
