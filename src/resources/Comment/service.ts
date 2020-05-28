@@ -113,7 +113,7 @@ const commentService = {
 
 		const updateParams = [req.body.content, req.params.id];
 		try {
-			const existingRecord = await connectedDao.get(sql.checkIfExists);
+			const existingRecord = await connectedDao.get(sql.checkIfExists, [req.params.id]);
 			if(existingRecord.length === 0) {
 				return errorResponses.notFound;
 			}
@@ -128,13 +128,13 @@ const commentService = {
 	*	Delete single comment by ID	
 	*/
 	delete: async (req: Request) => {
-		const { error } = validators.delete(req);
+		const { error } = validators.delete(req.params);
 		if(error) {
 			return errorResponses.badRequest;
 		};
 
 		try {
-			const existingRecord = await connectedDao.get(sql.checkIfExists);
+			const existingRecord = await connectedDao.get(sql.checkIfExists, [req.params.id]);
 			if(existingRecord.length === 0) {
 				return errorResponses.notFound;
 			}

@@ -14,20 +14,6 @@ const server = require('../dist/index.js');
 chai.use(chaiHTTP);
 
 
-/*
-*	Healthcheck
-*/
-describe('HEALTHCHECK', function() {
-	it('Should return a 200 OK from a GET on the healthcheck route', function(done) {
-		chai.request(server)
-			.get('/healthcheck')
-			.end((err, res) => {
-				res.should.have.status(200);
-				done();
-			});
-	})
-});
-
 
 describe(
 `
@@ -143,7 +129,7 @@ describe(
 			})
 		});
 
-		it('should insert a new post record to the database, with ID 5', function(done) {
+		it('should insert a new post record to the database, with ID 2', function(done) {
 			chai.request(server)
 			.post('/v1/posts')
 			.set('content-type', 'application/json')
@@ -174,33 +160,7 @@ describe(
 	});
 
 	describe('UPDATE /v1/posts/{id}', function() {
-		it('should update title and content fields on an existing post record', function(done) {
-			chai.request(server)
-			.put('/v1/posts/2')
-			.set('content-type', 'application/json')
-			.send({
-				user_id: 1,
-				title: 'Title has been updated',
-				content: 'Content has been updated'
-			})
-			.end(function(err, res) {
-				res.should.have.status(200);
-				done();
-			})
-		});
-
-		it('should find the post title and content have been updated', function(done) {
-			chai.request(server)
-			.get('/v1/posts/2')
-			.end(function(err, res) {
-				res.should.have.status(200);
-				res.body.data.should.be.a('object');
-				res.body.data.title.should.equal('Title has been updated');
-				res.body.data.content.should.equal('Content has been updated');
-				done();
-			})
-		});
-
+		
 		it('should fail with a 404 when the targeted resource does not exist', function(done) {
 			chai.request(server)
 			.put('/v1/posts/200')
@@ -259,9 +219,36 @@ describe(
 			})
 		});
 
+		it('should update title and content fields on an existing post record', function(done) {
+			chai.request(server)
+			.put('/v1/posts/2')
+			.set('content-type', 'application/json')
+			.send({
+				user_id: 1,
+				title: 'Title has been updated',
+				content: 'Content has been updated'
+			})
+			.end(function(err, res) {
+				res.should.have.status(200);
+				done();
+			})
+		});
+
+		it('should find the post title and content have been updated', function(done) {
+			chai.request(server)
+			.get('/v1/posts/2')
+			.end(function(err, res) {
+				res.should.have.status(200);
+				res.body.data.should.be.a('object');
+				res.body.data.title.should.equal('Title has been updated');
+				res.body.data.content.should.equal('Content has been updated');
+				done();
+			})
+		});
+
 	});
 
-	describe('DELETE /v1/posts', function() {
+	describe('DELETE /v1/posts/{id}', function() {
 
 		it('should fail with a 404 when targeted record does not exist', function(done) {
 			chai.request(server)
