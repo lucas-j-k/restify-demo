@@ -38,7 +38,7 @@ describe(
 						post.should.have.property('content');
 						post.should.have.property('user_id');
 						post.should.have.property('username');
-						post.should.have.property('content');
+						post.should.have.property('title');
 						post.content.should.be.a('string');
 					});
 					done();

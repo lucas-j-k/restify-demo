@@ -1,0 +1,463 @@
+openapi: "3.0.2"
+info:
+    title: Restify Test App
+    version: "1.0"
+    description: "Test API to experiment with Restify, Testing and documentation"
+
+servers:
+- url: http://localhost:8000/
+  description: LocalHost
+tags:
+- name: Posts
+  description: Manage post records
+- name: Comments
+  description: Manage comment records
+
+paths:
+  /v1/posts:
+    get:
+      summary: "Get all posts"
+      tags:
+      - Posts
+      description: "Returns an array of post records"
+      responses:
+        200:
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                title: Successful response
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/post"
+        404:
+          $ref: "#/components/responses/errorNotFound"
+    post:
+      summary: Create a new post
+      tags:
+      - Posts
+      description: Submit a new Post object to be inserted into the database
+      requestBody:
+        description: The new post to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/newPost"
+      responses:
+        200:
+          description: "Successful Response"
+          content:
+            application/json:
+              schema:
+                title: Successful Response
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+        400:
+            $ref: "#/components/responses/errorBadRequest"
+                    
+            
+  /v1/posts/{post_id}:
+    get:
+      summary: "Get a single post record"
+      tags:
+      - Posts
+      description: "Returns a single post object"
+      parameters:
+        - $ref: "#/components/parameters/post_id"
+      responses:
+        200:
+          description: Return a single post
+          content:
+            application/json:
+              schema:
+                title: Successful response
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: "#/components/schemas/post"
+        404:
+          $ref: "#/components/responses/errorNotFound"
+        400:
+          $ref: "#/components/responses/errorBadRequest"
+    put:
+      summary: Update an existing post
+      tags:
+      - Posts
+      description: Update the title and / or content of an existing post record in the database
+      requestBody:
+        description: Updated post details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/updatePost"
+      parameters:
+        - $ref: "#/components/parameters/post_id"
+      responses:
+        200:
+          description: Successfully updated
+          content:
+            application/json:
+              schema:
+                title: Successful response
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+        404:
+          $ref: "#/components/responses/errorNotFound"
+        400:
+          $ref: "#/components/responses/errorBadRequest"
+    delete:
+      summary: Delete an existing post
+      tags:
+      - Posts
+      description: Removes a specific existing post record from the database
+      parameters:
+        - $ref: "#/components/parameters/post_id"
+      responses:
+        200:
+          description: Successfully deleted
+          content:
+            application/json:
+              schema:
+                title: Successful response
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+        404:
+          $ref: "#/components/responses/errorNotFound"
+        400:
+          $ref: "#/components/responses/errorBadRequest"
+  
+  /v1/comments:
+    get:
+      summary: Get all comments
+      tags:
+      - Comments
+      description: Returns an array of comment records by user or post. Either ```user_id``` or ```comment_id``` must be provided
+      parameters:
+        - $ref: "#/components/parameters/post_idQuery"
+        - $ref: "#/components/parameters/user_idQuery"
+      responses:
+        200:
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                title: Successful response
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/comment"
+        400:
+          $ref: "#/components/responses/errorBadRequest"
+    post:
+      summary: Create a new comment
+      tags:
+      - Comments
+      description: Submit a new comment to be inserted into the database
+      requestBody:
+        description: The new comment to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/newComment"
+      responses:
+        200:
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                title: Successful response
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+        400:
+          $ref: "#/components/responses/errorBadRequest"
+              
+  /v1/comments/{comment_id}:
+    get:
+      summary: Get a single comment by ID
+      tags:
+      - Comments
+      description: Returns single comment record
+      parameters:
+      - $ref: "#/components/parameters/comment_id"
+      responses:
+        200:
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                title: Successful response
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: "#/components/schemas/comment"
+        400:
+          $ref: "#/components/responses/errorBadRequest"
+        404:
+          $ref: "#/components/responses/errorNotFound"
+    put:
+      summary: Update an existing comment
+      tags:
+      - Comments
+      description: Update the content of an existing comment record in the database
+      requestBody:
+        description: Updated comment details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/updateComment"
+      parameters:
+        - $ref: "#/components/parameters/comment_id"
+      responses:
+        200:
+          description: Successfully updated
+          content:
+            application/json:
+              schema:
+                title: Successful response
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+        404:
+          $ref: "#/components/responses/errorNotFound"
+        400:
+          $ref: "#/components/responses/errorBadRequest"
+    delete:
+      summary: Delete an existing comment
+      tags:
+      - Comments
+      description: Removes a specific existing comment record from the database
+      parameters:
+        - $ref: "#/components/parameters/comment_id"
+      responses:
+        200:
+          description: Successfully deleted
+          content:
+            application/json:
+              schema:
+                title: Successful response
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+        404:
+          $ref: "#/components/responses/errorNotFound"
+        400:
+          $ref: "#/components/responses/errorBadRequest"
+            
+
+components:
+  schemas:
+    errorNotFound:
+      title: Error - Not Found
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP error code
+          example: 404
+        message:
+          type: string
+          description: Information about the error
+          example: Resource not found
+    errorBadRequest:
+      title: Error - Bad request
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP error code
+          example: 400
+        message:
+          type: string
+          description: Information about the error
+          example: Bad request. Check query string parameters or request body
+    post:
+      title: Single Post (response)
+      type: object
+      properties:
+        id: 
+          type: integer
+          example: 1,
+          description: ID of the Post
+        content:
+          type: string
+          example: "Content of the post"
+          description: "Text content of the post"
+        user_id:
+          type: integer
+          description: ID of the user that created the post
+          example: 1
+        username:
+          type: string
+          description: Username of the user that created the post
+          example: username
+        title:
+          type: string
+          description: Text title of the post
+          example: Post Title
+    newPost:
+      title: Single Post (request)
+      type: object
+      properties:
+        user_id:
+          type: integer
+          description: ID of the user that created the post
+          example: 1
+        title:
+          type: string
+          description: Title text of the new post
+          example: Title of my new post
+        content:
+          type: string
+          description: Body content text of the new post
+          example: This is my new post
+    updatePost:
+      title: Updated Post (request)
+      type: object
+      properties:
+        title:
+          type: string
+          description: Updated post title
+          example: This is the updated post title
+        content:
+          type: string
+          description: Updated post content
+          example: This is the updated body content
+    comment:
+      title: Single Comment (response)
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: ID of the comment
+        post_id:
+          type: integer
+          example: 1
+          description: ID of the post this comment is associated with
+        user_id:
+          type: integer
+          example: 1
+          description: ID of the user this comment is associated with
+        username:
+          type: string
+          example: My_Username
+          description: Username of the user this comment is associated with
+        content:
+          type: string
+          example: This is the comment body content
+          description: Body text content of the comment
+    newComment:
+      title: Single Comment (request)
+      type: object
+      properties:
+        post_id:
+          type: integer
+          example: 1
+          description: ID of the post this comment is associated with
+        user_id:
+          type: integer
+          example: 1
+          description: ID of the user this comment is associated with
+        content:
+          type: string
+          example: This is the comment body content
+          description: Body text content of the comment
+    updateComment:
+      title: Updated Comment (request)
+      type: object
+      properties:
+        content:
+          type: string
+          description: Updated comment content
+          example: This is the updated body content
+              
+  responses:
+    errorNotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/errorNotFound"
+    errorBadRequest:
+      description: Bad request. Invalid or missing url /query parameters
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/errorBadRequest"
+
+          
+  parameters:
+    post_id:
+      in: path
+      name: post_id
+      schema:
+          type: integer
+          minimum: 1
+      required: true
+      description: Id of the post record to target
+    comment_id:
+      in: path
+      name: comment_id
+      schema:
+          type: integer
+          minimum: 1
+      required: true
+      description: Id of the comment to target
+    post_idQuery:
+      in: query
+      name: post_id
+      schema:
+        type: integer
+        minimum: 1
+      required: false
+      description: Id of the post record to target
+    user_idQuery:
+      in: query
+      name: user_id
+      schema:
+        type: integer
+        minimum: 1
+      required: false
+      description: Id of the user to target
+      
+      
+      
+      
+      

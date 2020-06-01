@@ -31,6 +31,6 @@ const buildError = (status: number, message: string) => ({
 */
 export const errorResponses = {
 	notFound: buildError(404, 'Resource not found'),
-	badRequest: buildError(400, 'Bad request. Check query string parameters or request body'),
+	badRequest: buildError(400, 'Bad request. Check query string, path or request body'),
 	internalServer: buildError(500, 'Internal server error'),
 };

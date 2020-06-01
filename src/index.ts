@@ -19,18 +19,24 @@ import commentRoutes from './resources/Comment/routes';
 const environment = process.env.ENVIRONMENT || 'development';
 const port = config[environment].port;
 
-
 // Initialise Restify server
 const server = restify.createServer();
 
 // Add middleware to parse request body and query string
 server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.queryParser());
-
-
+ 
 // Initialise resource routes
 postRoutes(server);
 commentRoutes(server);
+
+const swaggerUi = require('swagger-ui-restify');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./openapi.yaml');
+
+const docPath = '/documentation';
+server.get(docPath + '/*', ...swaggerUi.serve);
+server.get(docPath, swaggerUi.setup(swaggerDocument, {baseURL: docPath}));
 
 
 // Register healthcheck route for testing
