@@ -1,5 +1,7 @@
 # SQLite Database file
-database.sqlite
+*.sqlite
+*.sqlite3
+*.db
 
 #Compiled Typescript
 dist/

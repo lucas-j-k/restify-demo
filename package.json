@@ -6,7 +6,8 @@
   "scripts": {
     "migrate": "node dist/db/migrations/run.js",
     "dev": "./node_modules/.bin/tsc-watch --onCompilationComplete \"node dist/index.js\"",
-    "test": "env ENVIRONMENT=testing mocha"
+    "test": "env ENVIRONMENT=testing mocha",
+    "build": "./node_modules/.bin/tsc"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,6 @@
     "mocha": "^7.2.0",
     "tsc-watch": "^4.2.0",
     "types-joi": "^2.0.1",
-    "typescript": "^3.8.2"
+    "typescript": "^3.9.3"
   }
 }

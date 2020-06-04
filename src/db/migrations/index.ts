@@ -4,10 +4,14 @@
 *
 */
 
+import dotenv from 'dotenv';
+
 import resetDb from './reset-db';
 import migrateUsers from './create-users';
 import migratePosts from './create-posts';
 import migrateComments from './create-comments';
+
+dotenv.config();
 
 interface configObject {
     users: number,
@@ -41,12 +45,14 @@ const runMigrations = async (config: configObject) => {
         await migrateComments(config.users, config.postsPerUser, config.comments);
 
         console.log('Database ready');
-    } catch(e){
+    } catch (e) {
         console.log("Error running migrations: ", e);
     }
 
 }
 
 
-// Export for testing
+// Common mpdule export for testing
 module.exports = runMigrations;
+
+export default runMigrations;
