@@ -7,7 +7,8 @@
     "migrate": "node dist/db/migrations/run.js",
     "dev": "./node_modules/.bin/tsc-watch --onCompilationComplete \"node dist/index.js\"",
     "test": "env ENVIRONMENT=testing mocha",
-    "build": "./node_modules/.bin/tsc"
+    "build": "./node_modules/.bin/tsc",
+    "start": "node dist/index.js"
   },
   "repository": {
     "type": "git",
